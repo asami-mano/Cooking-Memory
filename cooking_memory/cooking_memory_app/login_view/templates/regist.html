@@ -1,8 +1,33 @@
 {% extends 'base.html' %}
 {% block content %}
+<style>
+    label {
+      font-size: 60px;
+    }
+    input[type="text"],
+    input[type="email"],
+    input[type="password"]{
+      font-size: 60px;
+      height: 100px;
+    }
+    input[type="submit"] {
+        font-size: 60px !important;
+        padding: 10px 30px !important;
+        {% comment %} background-color: #4CAF50;/* 緑っぽい */
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer; {% endcomment %}
+      }
+    
+    {% comment %} button:hover {
+        background-color: #45a049;
+      } {% endcomment %}
+  </style>  
+
 <form method="POST">
     {% csrf_token %}
     {{ form.as_p }}
-    <input type="submit" value="ユーザー登録">
+    <input type="submit" value="登録">
 </form>
 {% endblock  %}
