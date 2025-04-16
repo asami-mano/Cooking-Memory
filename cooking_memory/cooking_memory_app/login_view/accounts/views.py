@@ -4,7 +4,7 @@ from django.views.generic import(
 )
 from django.urls import reverse_lazy
 from django.contrib.auth import authenticate,login,logout
-from .forms import RegistForm,UserLoginForm
+from .forms import RegistForm,UserLoginForm,UserLoginForm2
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
@@ -47,7 +47,7 @@ class UserLogoutView(View):
 class UserLoginView2(LoginView):
     template_name = 'user_login_2.html'
     next_page = reverse_lazy('accounts:home')
-    # form_class = UserLoginForm2
+    form_class = UserLoginForm2
 
 class UserLogoutView2(LogoutView):
     next_page = reverse_lazy('accounts:home')
