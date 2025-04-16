@@ -17,7 +17,34 @@
         {% endif %}
         <a class="navbar-brand" href="{% url 'accounts:user' %}">ユーザー画面</a>
     </nav>
+    
+    <style>
+        .link {
+            display: inline-block;        /* 横幅と高さを指定できる行内要素に */
+            font-size: 40px;              /* 文字の大きさ */
+            padding: 15px 30px;           /* 上下に15px、左右に30pxの余白 */
+            color: #333;                  /* 文字の色（#333はダークグレー） */
+            margin-top: 50px;             /* 上に50pxの余白（離す） */
+          }
+    </style>  
+    
     <form id="logout-form" method="POST" action="{% url 'accounts:user_logout_2' %}">
+
+    {% comment %} <div class="buttons">
+        <form method="POST" action="{% url 'accounts:user_logout_2' %}">
+            {% csrf_token %}
+            <button type="submit">ログアウト</button>
+        </form>
+        <form method="POST" action="{% url 'accounts:user_delete' %}">
+            {% csrf_token %}
+            <button type="submit">削除</button>
+        </form>
+    </div> {% endcomment %}
+    {% comment %} <div class="limk">
+        <a href="{% url 'accounts:user_login_2' %}">ログイン画面へ戻る</a>
+        <a href="{% url 'accounts:regist' %}">アカウント登録</a>
+    </div> {% endcomment %}
+    
         {% csrf_token %}
     </form>
     {% block content %}
