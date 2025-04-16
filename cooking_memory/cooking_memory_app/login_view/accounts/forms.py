@@ -39,6 +39,6 @@ class UserLoginForm(forms.Form):
 
 
 class UserLoginForm2(AuthenticationForm):
-    username = forms.EmailField(label='メールアドレス')
+    email = forms.EmailField(label='メールアドレス')
     password = forms.CharField(label='パスワード', widget=forms.PasswordInput())
 

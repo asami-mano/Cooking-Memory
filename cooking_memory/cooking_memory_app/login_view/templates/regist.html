@@ -5,14 +5,14 @@
         display: flex;
         flex-direction: column;
         align-items: center; /* 子要素（入力欄・ボタン）を中央に */
-        margin-top: 100px;
-      }
+        margin-top: 50px;
+    }
     
-      form div {
+    form div {
         margin-bottom: 80px;
         width: 100%;
         max-width: 700px; /* 入力欄の幅を制限 */
-      }
+    }
     label {
         display: block;
         font-size: 60px;
@@ -24,19 +24,17 @@
       height: 100px;
     }
     input[type="submit"] {
-        font-size: 60px !important;
-        padding: 10px 30px !important;
-        {% comment %} background-color: #4CAF50;/* 緑っぽい */
-        color: white;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer; {% endcomment %}
+        font-size: 60px;
+        padding: 10px 30px;
+    }
+    .back-to-login {
+        display: inline-block;        /* 横幅と高さを指定できる行内要素に */
+        font-size: 40px;              /* 文字の大きさ */
+        padding: 15px 30px;           /* 上下に15px、左右に30pxの余白 */
+        color: #333;                  /* 文字の色（#333はダークグレー） */
+        margin-top: 50px;             /* 上に50pxの余白（離す） */
       }
-    
-    {% comment %} button:hover {
-        background-color: #45a049;
-      } {% endcomment %}
-  </style>  
+</style>  
 
 <form method="POST">
     {% csrf_token %}
@@ -52,6 +50,11 @@
         {{ form.password.label_tag }}<br>
         {{ form.password }}
     </div>
+    <div>
+        {{ form.password2.label_tag }}<br>
+        {{ form.password2 }}
+    </div>
     <input type="submit" value="登録">
+    <a href="{% url 'accounts:user_login_2' %}" class="back-to-login">ログイン画面へ戻る</a>
 </form>
 {% endblock  %}
