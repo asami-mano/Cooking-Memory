@@ -8,6 +8,7 @@ from .forms import RegistForm,UserLoginForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.views import LoginView,LogoutView
 
 class HomeView(TemplateView):
     template_name='home.html'
@@ -43,12 +44,18 @@ class UserLogoutView(View):
         logout(request)
         return redirect('accounts:home')
     
+class UserLoginView2(LoginView):
+    template_name = 'user_login_2.html'
+    next_page = reverse_lazy('accounts:home')
+    # form_class = UserLoginForm2
+
+class UserLogoutView2(LogoutView):
+    next_page = reverse_lazy('accounts:home')
+    http_method_names = ['get', 'post']
+    template_name = 'user_logout.html'   
     
 class UserView(LoginRequiredMixin, TemplateView):
     template_name = 'user.html'
-    
-    class UserView(LoginRequiredMixin, TemplateView):
-        template_name = 'user.html'
     
     @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
