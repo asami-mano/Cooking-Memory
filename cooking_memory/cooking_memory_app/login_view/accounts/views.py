@@ -4,11 +4,12 @@ from django.views.generic import(
 )
 from django.urls import reverse_lazy
 from django.contrib.auth import authenticate,login,logout
-from .forms import RegistForm,UserLoginForm,UserLoginForm2
+from .forms import RegistForm,UserLoginForm,UserLoginForm2,EmailChangeForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView,LogoutView
+from django.contrib import messages
 
 class HomeView(TemplateView):
     template_name='home.html'
@@ -21,15 +22,18 @@ class RegistUserView(CreateView):
 class UserLoginView2(FormView):
     template_name='user_login_2.html'
     form_class=UserLoginForm2
-    success_url = reverse_lazy('accounts:home')
+    success_url = reverse_lazy('accounts:user')
 
     def form_valid(self, form):
-        email = form.cleaned_data['username']
+        email = form.cleaned_data['email']
         password = form.cleaned_data['password']
-        user = authenticate(email=email, password=password)
+        user = authenticate(self.request, email=email, password=password)
         if user:
             login(self.request, user)
-        return super().form_valid(form)
+            return super().form_valid(form)
+        else:
+            messages.error(self.request, "メールアドレスまたはパスワードが正しくありません。")
+            return self.form_invalid(form)
     
     def get_success_url(self):
         next_url = self.request.GET.get('next')
@@ -61,3 +65,24 @@ class UserView(LoginRequiredMixin, TemplateView):
     def get(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
         return self.render_to_response(context)
+
+class ChangeEmailView(LoginRequiredMixin,FormView):
+    template_name='change_email.html'
+    form_class=EmailChangeForm
+    success_url = reverse_lazy('accounts:user')
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['request'] = self.request  # ←ここで渡す
+        return kwargs
+    
+    def form_valid(self, form):
+        user = self.request.user
+        user.email = form.cleaned_data['new_email']
+        user.save()
+        return super().form_valid(form)
+    
+    def get_success_url(self):
+        next_url = self.request.GET.get('next')
+        print('next: ', next_url)
+        return next_url if next_url else self.success_url

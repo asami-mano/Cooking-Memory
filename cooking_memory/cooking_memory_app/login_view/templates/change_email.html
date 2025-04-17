@@ -17,8 +17,7 @@
         display: block;
         font-size: 60px;
     }
-    input[type="email"],
-    input[type="password"]{
+    input[type="email"]{
       font-size: 60px;
       height: 100px;
     }
@@ -26,13 +25,6 @@
         font-size: 60px;
         padding: 10px 30px;
     }
-    .regist-account {
-        display: inline-block;        /* 横幅と高さを指定できる行内要素に */
-        font-size: 40px;              /* 文字の大きさ */
-        padding: 15px 30px;           /* 上下に15px、左右に30pxの余白 */
-        color: #333;                  /* 文字の色（#333はダークグレー） */
-        margin-top: 50px;             /* 上に50pxの余白（離す） */
-      }
 </style>  
 
 <form method="POST">
@@ -42,11 +34,10 @@
         {{ form.email }}
     </div>
     <div>
-        {{ form.password.label_tag }}<br>
-        {{ form.password }}
+        {{ form.new_email.label_tag }}<br>
+        {{ form.new_email }}
     </div>
-    <input type="submit" value="ログイン">
-    <a href="{% url 'accounts:regist' %}" class="regist-account">アカウント登録</a>
+    <input type="submit" value="変更">
 
 </form>
 {% endblock  %}

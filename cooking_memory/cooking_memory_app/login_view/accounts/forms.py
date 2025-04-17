@@ -38,10 +38,14 @@ class UserLoginForm(forms.Form):
     password = forms.CharField(label='パスワード', widget=forms.PasswordInput())
 
 
-class UserLoginForm2(AuthenticationForm):
-    username = forms.EmailField(label='メールアドレス')
-    new_username = forms.EmailField(label='メールアドレス')
+class UserLoginForm2(forms.Form):
+    email = forms.EmailField(label='メールアドレス')
     password = forms.CharField(label='パスワード', widget=forms.PasswordInput())
 
 class EmailChangeForm(forms.Form):
-    email = forms.EmailField(label='新しいメールアドレス')
+    email = forms.EmailField(label='現在のメールアドレス')
+    new_email = forms.EmailField(label='新しいメールアドレス')
+    
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)  # ←ここで取り出す
+        super().__init__(*args, **kwargs)
