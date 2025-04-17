@@ -39,8 +39,5 @@ class UserLoginForm(forms.Form):
 
 
 class UserLoginForm2(AuthenticationForm):
-    def __init__(self, request=None, *args, **kwargs):
-        super().__init__(request, *args, **kwargs)
-        self.fields['username'].label = 'メールアドレス'
-        self.fields['username'].widget.attrs['placeholder'] = 'メールアドレス'
-
+    username = forms.EmailField(label='メールアドレス')
+    password = forms.CharField(label='パスワード', widget=forms.PasswordInput())
