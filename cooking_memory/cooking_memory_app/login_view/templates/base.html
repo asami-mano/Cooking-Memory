@@ -29,22 +29,6 @@
     </style>  
     
     <form id="logout-form" method="POST" action="{% url 'accounts:user_logout_2' %}">
-
-    {% comment %} <div class="buttons">
-        <form method="POST" action="{% url 'accounts:user_logout_2' %}">
-            {% csrf_token %}
-            <button type="submit">ログアウト</button>
-        </form>
-        <form method="POST" action="{% url 'accounts:user_delete' %}">
-            {% csrf_token %}
-            <button type="submit">削除</button>
-        </form>
-    </div> {% endcomment %}
-    {% comment %} <div class="limk">
-        <a href="{% url 'accounts:user_login_2' %}">ログイン画面へ戻る</a>
-        <a href="{% url 'accounts:regist' %}">アカウント登録</a>
-    </div> {% endcomment %}
-    
         {% csrf_token %}
     </form>
     {% block content %}

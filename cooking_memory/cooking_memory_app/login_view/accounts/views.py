@@ -18,9 +18,9 @@ class RegistUserView(CreateView):
     form_class=RegistForm
     success_url=reverse_lazy('accounts:home')
     
-class UserLoginView(FormView):
-    template_name='user_login.html'
-    form_class=UserLoginForm
+class UserLoginView2(FormView):
+    template_name='user_login_2.html'
+    form_class=UserLoginForm2
     success_url = reverse_lazy('accounts:home')
 
     def form_valid(self, form):
@@ -44,10 +44,10 @@ class UserLogoutView(View):
         logout(request)
         return redirect('accounts:home')
     
-class UserLoginView2(LoginView):
-    template_name = 'user_login_2.html'
+class UserLoginView(LoginView):
+    template_name = 'user_login.html'
     next_page = reverse_lazy('accounts:home')
-    form_class = UserLoginForm2
+    form_class = UserLoginForm
 
 class UserLogoutView2(LogoutView):
     next_page = reverse_lazy('accounts:home')
