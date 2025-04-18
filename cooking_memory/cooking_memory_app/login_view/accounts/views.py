@@ -54,7 +54,7 @@ class UserLoginView(LoginView):
     form_class = UserLoginForm
 
 class UserLogoutView2(LogoutView):
-    next_page = reverse_lazy('accounts:home')
+    next_page = reverse_lazy('accounts:mypage')
     http_method_names = ['get', 'post']
     template_name = 'user_logout.html'   
     
