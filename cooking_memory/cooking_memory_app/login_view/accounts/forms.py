@@ -49,3 +49,26 @@ class EmailChangeForm(forms.Form):
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)  # ←ここで取り出す
         super().__init__(*args, **kwargs)
+    
+class PasswordChangeForm(forms.Form):
+    password = forms.CharField(widget=forms.PasswordInput(),label='現在のパスワード')
+    new_password = forms.CharField(widget=forms.PasswordInput(),label='新しいパスワード')
+    new_password2 = forms.CharField(widget=forms.PasswordInput(),label='新しいパスワード再入力')
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)  # ←ここで取り出す
+        super().__init__(*args, **kwargs)
+        
+    def clean(self):
+        cleaned_data = super().clean()
+        old = cleaned_data.get('password')
+        new1 = cleaned_data.get('new_password')
+        new2 = cleaned_data.get('new_password2')
+
+        if not self.user.check_password(old):
+            self.add_error('password', '現在のパスワードが違います')
+
+        if new1 and new2 and new1 != new2:
+            self.add_error('new_password2', 'パスワードが一致しません')
+
+        return cleaned_data

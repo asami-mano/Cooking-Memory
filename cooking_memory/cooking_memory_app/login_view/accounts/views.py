@@ -3,8 +3,8 @@ from django.views.generic import(
     TemplateView,CreateView,FormView,View
 )
 from django.urls import reverse_lazy
-from django.contrib.auth import authenticate,login,logout
-from .forms import RegistForm,UserLoginForm,UserLoginForm2,EmailChangeForm
+from django.contrib.auth import authenticate,login,logout,update_session_auth_hash
+from .forms import RegistForm,UserLoginForm,UserLoginForm2,EmailChangeForm,PasswordChangeForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
@@ -86,3 +86,26 @@ class ChangeEmailView(LoginRequiredMixin,FormView):
         next_url = self.request.GET.get('next')
         print('next: ', next_url)
         return next_url if next_url else self.success_url
+
+class MyPasswordChangeView(LoginRequiredMixin, FormView):
+    template_name='change_password.html'
+    form_class=PasswordChangeForm
+    success_url = reverse_lazy('accounts:user')
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user  # ←ここで渡す
+        return kwargs
+    
+    def form_valid(self, form):
+        new_password = form.cleaned_data['new_password']
+        user = self.request.user
+        user.set_password(new_password)
+        user.save()
+        update_session_auth_hash(self.request, user)  # ← これでログアウトされないように！
+        return super().form_valid(form)
+    
+    # def get_success_url(self):
+    #     next_url = self.request.GET.get('next')
+    #     print('next: ', next_url)
+    #     return next_url if next_url else self.success_url
