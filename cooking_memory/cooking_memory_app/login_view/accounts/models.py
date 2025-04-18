@@ -3,6 +3,7 @@ from django.contrib.auth.models import(
     BaseUserManager,AbstractBaseUser,PermissionsMixin
 )
 from django.urls import reverse_lazy
+from django.utils import timezone
 
 
 class UserManager(BaseUserManager):
@@ -25,11 +26,16 @@ class User(AbstractBaseUser,PermissionsMixin):
     is_active=models.BooleanField(default=True)
     is_staff=models.BooleanField(default=False)
     
+    share_group_id = models.IntegerField(blank=True, null=True)
+    image_url = models.URLField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
     USERNAME_FIELD='email'
     REQUIRED_FIELDS=['username']
     
     objects=UserManager()
     
     def get_absolute_url(self):
-        return reverse_lazy("accounts:home")
+        return reverse_lazy("accounts:home")#あとでhomeをmypageに変更する
     
