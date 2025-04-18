@@ -5,6 +5,8 @@ from .views import(
     UserLogoutView,UserView,UserLoginView2,
     UserLogoutView2,ChangeEmailView,MyPasswordChangeView
 )
+from django.conf import settings
+from django.conf.urls.static import static
 
 app_name='accounts'
 urlpatterns = [
@@ -19,4 +21,4 @@ urlpatterns = [
     path('change_password/',MyPasswordChangeView.as_view(),name='change_password'),
 
 
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

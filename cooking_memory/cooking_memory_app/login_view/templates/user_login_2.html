@@ -1,11 +1,10 @@
-{% extends 'base.html' %}
 {% block content %}
 <style>
     form {
         display: flex;
         flex-direction: column;
         align-items: center; /* 子要素（入力欄・ボタン）を中央に */
-        margin-top: 100px;
+        margin-top: 30%;
     }
     
     form div {
@@ -34,6 +33,8 @@
         margin-top: 50px;             /* 上に50pxの余白（離す） */
       }
 </style>  
+
+<embed src="/media/cooking_memory.pdf" type="application/pdf" width="50%" height="100px" />
 
 <form method="POST">
     {% csrf_token %}

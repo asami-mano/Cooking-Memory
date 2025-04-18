@@ -18,7 +18,7 @@
         <a class="navbar-brand" href="{% url 'accounts:user' %}">ユーザー画面</a>
     </nav>
     
-    <style>
+    {% comment %} <style>
         .link {
             display: inline-block;        /* 横幅と高さを指定できる行内要素に */
             font-size: 40px;              /* 文字の大きさ */
@@ -26,7 +26,7 @@
             color: #333;                  /* 文字の色（#333はダークグレー） */
             margin-top: 50px;             /* 上に50pxの余白（離す） */
           }
-    </style>  
+    </style>   {% endcomment %}
     
     <form id="logout-form" method="POST" action="{% url 'accounts:user_logout_2' %}">
         {% csrf_token %}
