@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+    form {
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* 子要素（入力欄・ボタン）を中央に */
+        margin-top: 20%;
+    }
+    
+    form div {
+        margin-bottom: 80px;
+        width: 100%;
+        max-width: 700px; /* 入力欄の幅を制限 */
+    }
+    label {
+        display: block;
+        font-size: 60px;
+    }
+    input[type="submit"] {
+        font-size: 60px;
+        padding: 10px 30px;
+    }
+    .menu-link {
+        display: inline-block;        /* 横幅と高さを指定できる行内要素に */
+        font-size: 20px;              /* 文字の大きさ */
+        padding: 5px 5px;           /* 上下に px、左右に pxの余白 */
+        color: #333;                  /* 文字の色（#333はダークグレー） */
+        margin-top: 50px;             /* 上に50pxの余白（離す） */
+      }
+
+</style>  
+
+<h2>マイページ</h2>
+
+<!-- プロフィール画像 -->
+{% comment %} <img src="{{ user.profile_image.url }}" alt="プロフィール画像">
+<form method="post" enctype="multipart/form-data" action="{% url 'upload_profile_image' %}">
+  {% csrf_token %}
+  <input type="file" name="image">
+  <button type="submit">＋画像を登録</button>
+</form> {% endcomment %}
+
+<!-- 名前/ニックネーム -->
+    {{ user.username }}
+    <button onclick="openModal()">名前変更</button>
+
+<div>
+<a class="menu-link" href="{% url 'accounts:change_email' %}">メールアドレス変更</a><br>
+<a class="menu-link" href="{% url 'accounts:change_password' %}">パスワード変更</a><br>
+<a class="menu-link" href="{% url 'accounts:generate_invite' %}">招待用URLの発行</a><br>
+<a class="menu-link" href="#" onclick="share_user()">共有中のユーザー</a><br>
+</div>
+
+<!-- ログアウト -->
+<form method="post" action="{% url 'accounts:user_logout_2' %}">
+  {% csrf_token %}
+  <button type="submit">ログアウト</button>
+</form>
+
+{% endblock %}

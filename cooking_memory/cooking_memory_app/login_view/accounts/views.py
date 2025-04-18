@@ -109,3 +109,12 @@ class MyPasswordChangeView(LoginRequiredMixin, FormView):
     #     next_url = self.request.GET.get('next')
     #     print('next: ', next_url)
     #     return next_url if next_url else self.success_url
+
+class MyPageView(LoginRequiredMixin, TemplateView):
+    template_name = 'mypage.html'
+    
+class GenerateInviteView(LoginRequiredMixin, TemplateView):
+    template_name = 'generate_invite.html'
+    
+class ShareUserView(LoginRequiredMixin, TemplateView):
+    template_name = 'share_user.html'
