@@ -1,4 +1,3 @@
-from django.contrib.auth.views import PasswordChangeView
 from django.urls import path
 from .views import(
     RegistUserView,HomeView,UserLoginView,
@@ -23,5 +22,6 @@ urlpatterns = [
     path('mypage/', MyPageView.as_view(), name='mypage'),
     path('generate_invite/',GenerateInviteView.as_view(),name='generate_invite'),
     path('share_user/', ShareUserView.as_view(), name='share_user'),
+    path('share_regist/<str:token>/', RegistUserView.as_view(), name='share_regist'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

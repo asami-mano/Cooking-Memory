@@ -24,7 +24,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='user',
-            name='share_group_id',
+            name='share_group',
             field=models.IntegerField(blank=True, null=True),
         ),
         migrations.AddField(

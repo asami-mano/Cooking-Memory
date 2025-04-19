@@ -2,7 +2,7 @@ from django.shortcuts import render,redirect
 from django.views.generic import(
     TemplateView,CreateView,FormView,View
 )
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy,reverse
 from django.contrib.auth import authenticate,login,logout,update_session_auth_hash
 from .forms import RegistForm,UserLoginForm,UserLoginForm2,EmailChangeForm,PasswordChangeForm
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -10,6 +10,8 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView,LogoutView
 from django.contrib import messages
+from django.utils.crypto import get_random_string
+from .models import Invitation
 
 class HomeView(TemplateView):
     template_name='home.html'
@@ -18,6 +20,28 @@ class RegistUserView(CreateView):
     template_name='regist.html'
     form_class=RegistForm
     success_url=reverse_lazy('accounts:home')
+    
+    def dispatch(self, request, *args, **kwargs):
+        self.token = kwargs.get('token')  # 招待ありならここにトークンが入る
+        return super().dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        user = form.save(commit=False)
+
+        # 招待URL経由ならグループを共有
+        if self.token:
+            try:
+                invitation = Invitation.objects.get(invitation_url=self.invite_url, used=0)
+                user.share_group = invitation.user.share_group
+                invitation.used = 1
+                invitation.save()
+            except Invitation.DoesNotExist:
+                form.add_error(None, "招待リンクが無効です。")
+                return self.form_invalid(form)
+
+        user.save()
+        login(self.request, user)
+        return super().form_valid(form)
     
 class UserLoginView2(FormView):
     template_name='user_login_2.html'
@@ -112,9 +136,26 @@ class MyPasswordChangeView(LoginRequiredMixin, FormView):
 
 class MyPageView(LoginRequiredMixin, TemplateView):
     template_name = 'mypage.html'
-    
-class GenerateInviteView(LoginRequiredMixin, TemplateView):
-    template_name = 'generate_invite.html'
-    
+        
 class ShareUserView(LoginRequiredMixin, TemplateView):
     template_name = 'share_user.html'
+
+class GenerateInviteView(LoginRequiredMixin, TemplateView):
+    template_name = 'generate_invite.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        token = get_random_string(20)
+        invite_url = self.request.build_absolute_uri(
+            reverse('accounts:share_regist', args=[token])
+        )
+        
+        Invitation.objects.create(
+            user=self.request.user,
+            invitation_url=invite_url,
+            used=0  # 0: 未使用
+        )
+            
+        context['invite_url'] = invite_url
+        return context
+    

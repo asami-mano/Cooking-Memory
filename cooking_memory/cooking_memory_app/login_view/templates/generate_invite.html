@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    form {
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* 子要素（入力欄・ボタン）を中央に */
+        margin-top: 100px;
+    }
+    
+    form div {
+        margin-bottom: 80px;
+        width: 100%;
+        max-width: 700px; /* 入力欄の幅を制限 */
+    }
+    label {
+        display: block;
+        font-size: 60px;
+    }
+    input[type="url"]{
+      font-size: 60px;
+      height: 100px;
+    }
+    input[type="submit"] {
+        font-size: 60px;
+        padding: 10px 30px;
+    }
+</style>  
+
+{% if invite_url %}
+    <h1>招待用URL：</h1>
+    <input type="text" value="{{ invite_url }}" readonly style="width:80%;">
+    <button onclick="copyToClipboard()">コピー</button>
+    <p>※このリンクを招待したい人に送ってください。</p>
+    <p>※このリンクは一度利用されると無効になります。</p>
+
+{% else %}
+    <p>招待リンクの生成に失敗しました。</p>
+{% endif %}
+
+<script>
+function copyToClipboard() {
+    const input = document.querySelector('input');
+    input.select();
+    navigator.clipboard.writeText(input.value)
+    alert('コピーしました！');
+}
+</script>
+
+{% endblock  %}

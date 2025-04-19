@@ -4,7 +4,7 @@ from django.contrib.auth.models import(
 )
 from django.urls import reverse_lazy
 from django.utils import timezone
-
+from django.conf import settings
 
 class UserManager(BaseUserManager):
     def create_user(self,username,email,password):
@@ -20,13 +20,16 @@ class UserManager(BaseUserManager):
         user.save()
         return user
 
+class ShareGroup(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
 class User(AbstractBaseUser,PermissionsMixin):
     username=models.CharField(max_length=30)
     email=models.EmailField(max_length=100,unique=True)
     is_active=models.BooleanField(default=True)
     is_staff=models.BooleanField(default=False)
-    
-    share_group_id = models.IntegerField(blank=True, null=True)
+    share_group = models.ForeignKey(ShareGroup, on_delete=models.SET_NULL, null=True, blank=True)
     image_url = models.URLField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -39,3 +42,13 @@ class User(AbstractBaseUser,PermissionsMixin):
     def get_absolute_url(self):
         return reverse_lazy("accounts:home")#あとでhomeをmypageに変更する
     
+class Invitation(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    invitation_url = models.CharField(max_length=300, unique=True)
+    used = models.IntegerField(default=0)# 0: 未使用, 1: 使用済み
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    def is_used(self):
+        return self.used == 1
+
