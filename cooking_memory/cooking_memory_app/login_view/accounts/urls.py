@@ -3,7 +3,8 @@ from .views import(
     RegistUserView,HomeView,UserLoginView,
     UserLogoutView,UserView,UserLoginView2,
     UserLogoutView2,ChangeEmailView,MyPasswordChangeView,
-    MyPageView,GenerateInviteView,ShareUserView
+    MyPageView,GenerateInviteView,ShareUsersView,
+    
 )
 from django.conf import settings
 from django.conf.urls.static import static
@@ -21,7 +22,11 @@ urlpatterns = [
     path('change_password/',MyPasswordChangeView.as_view(),name='change_password'),
     path('mypage/', MyPageView.as_view(), name='mypage'),
     path('generate_invite/',GenerateInviteView.as_view(),name='generate_invite'),
-    path('share_user/', ShareUserView.as_view(), name='share_user'),
-    path('share_regist/<str:token>/', RegistUserView.as_view(), name='share_regist'),
+    path('share_regist/<str:invitation_url>/', RegistUserView.as_view(), name='share_regist'),
+    path('share_users/', ShareUsersView.as_view(), name='share_users'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+# urlpatterns += [
+#     path('share_users/', ShareUsersView.as_view(), name='share_users'),
+# ]

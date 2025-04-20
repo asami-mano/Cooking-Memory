@@ -1,9 +1,9 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,get_object_or_404
 from django.views.generic import(
     TemplateView,CreateView,FormView,View
 )
 from django.urls import reverse_lazy,reverse
-from django.contrib.auth import authenticate,login,logout,update_session_auth_hash
+from django.contrib.auth import authenticate,login,logout,update_session_auth_hash,get_user_model
 from .forms import RegistForm,UserLoginForm,UserLoginForm2,EmailChangeForm,PasswordChangeForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.decorators import method_decorator
@@ -11,36 +11,50 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView,LogoutView
 from django.contrib import messages
 from django.utils.crypto import get_random_string
-from .models import Invitation
+from .models import Invitation,ShareGroup,User
+from django.http import JsonResponse
+from django.views import View
+from django.views.generic.edit import FormView
 
 class HomeView(TemplateView):
     template_name='home.html'
     
 class RegistUserView(CreateView):
-    template_name='regist.html'
-    form_class=RegistForm
-    success_url=reverse_lazy('accounts:home')
-    
+    template_name = 'regist.html'
+    form_class = RegistForm
+    success_url = reverse_lazy('accounts:home')
+
     def dispatch(self, request, *args, **kwargs):
-        self.token = kwargs.get('token')  # 招待ありならここにトークンが入る
+        self.invitation_url = kwargs.get('invitation_url')  # 招待URLの取得
+        print("受け取ったinvitation_url:", self.invitation_url) 
+        self.invitation = get_object_or_404(Invitation, invitation_url=self.invitation_url, used=0)
         return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
         user = form.save(commit=False)
 
-        # 招待URL経由ならグループを共有
-        if self.token:
-            try:
-                invitation = Invitation.objects.get(invitation_url=self.invite_url, used=0)
-                user.share_group = invitation.user.share_group
-                invitation.used = 1
-                invitation.save()
-            except Invitation.DoesNotExist:
-                form.add_error(None, "招待リンクが無効です。")
-                return self.form_invalid(form)
+        # 招待者を取得
+        inviter = self.invitation.user
 
+        # 招待者がshare_groupを持っていなければ作成
+        if not inviter.share_group:
+            group = ShareGroup.objects.create()
+            inviter.share_group = group
+            inviter.save()
+        else:
+            group = inviter.share_group
+
+        # 招待されたユーザーにもグループを割り当て
+        user.share_group = group
         user.save()
+
+        # 招待トークンを使用済みにする
+        self.invitation.used = 1
+        self.invitation.save()
+
+        # ユーザーをログイン状態にする
         login(self.request, user)
+
         return super().form_valid(form)
     
 class UserLoginView2(FormView):
@@ -70,7 +84,7 @@ class UserLogoutView(View):
 
     def post(self, request, *args, **kwargs):
         logout(request)
-        return redirect('accounts:home')
+        return redirect('accounts:my_list')
     
 class UserLoginView(LoginView):
     template_name = 'user_login.html'
@@ -137,9 +151,6 @@ class MyPasswordChangeView(LoginRequiredMixin, FormView):
 class MyPageView(LoginRequiredMixin, TemplateView):
     template_name = 'mypage.html'
         
-class ShareUserView(LoginRequiredMixin, TemplateView):
-    template_name = 'share_user.html'
-
 class GenerateInviteView(LoginRequiredMixin, TemplateView):
     template_name = 'generate_invite.html'
 
@@ -159,3 +170,32 @@ class GenerateInviteView(LoginRequiredMixin, TemplateView):
         context['invite_url'] = invite_url
         return context
     
+User = get_user_model()
+
+class ShareUsersView(LoginRequiredMixin, View):
+    def get(self, request, *args, **kwargs):
+        try:
+            print("ログインユーザー：", request.user)
+            print("ユーザーのグループ：", request.user.share_group)
+            
+            share_group = request.user.share_group
+            
+            if share_group is None:
+                # 共有グループに属していなければ空リストを返す
+                return JsonResponse({'users': []})
+        
+            users = User.objects.filter(share_group=share_group).exclude(id=request.user.id)
+            
+            print("共有中ユーザー：", users)
+            
+            data = {
+                'users': [{'name': user.username} for user in users]
+            }
+        except Exception as e:
+            print("エラー内容：", str(e))
+            
+            data = {
+                'error': str(e)
+            }
+
+        return JsonResponse(data)

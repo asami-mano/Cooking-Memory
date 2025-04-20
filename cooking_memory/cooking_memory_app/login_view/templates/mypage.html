@@ -51,13 +51,55 @@
 <a class="menu-link" href="{% url 'accounts:change_email' %}">メールアドレス変更</a><br>
 <a class="menu-link" href="{% url 'accounts:change_password' %}">パスワード変更</a><br>
 <a class="menu-link" href="{% url 'accounts:generate_invite' %}">招待用URLの発行</a><br>
-<a class="menu-link" href="#" onclick="share_user()">共有中のユーザー</a><br>
+<a class="menu-link" href="#" data-bs-toggle="modal" data-bs-target="#shareUsersModal" onclick="share_users()">共有中のユーザー</a>
 </div>
 
+<!-- モーダル本体 -->
+<div class="modal fade" id="shareUsersModal" tabindex="-1" aria-labelledby="shareUsersModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="shareUsersModalLabel">共有中のユーザー</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="閉じる"></button>
+        </div>
+        <div class="modal-body">
+          <!-- ここに共有ユーザーのリストを表示 -->
+          <ul id="shareUsersList"></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  
 <!-- ログアウト -->
 <form method="post" action="{% url 'accounts:user_logout_2' %}">
   {% csrf_token %}
   <button type="submit">ログアウト</button>
 </form>
 
+<script>
+  function share_users() {
+      fetch("{% url 'accounts:share_users' %}")
+          .then(response => response.json())
+          .then(data => {
+              const userListDiv = document.getElementById("shareUsersList");
+              userListDiv.innerHTML = "";// 既存のリストをクリア
+              
+              if (data.users.length > 0) {                  
+                  data.users.forEach(user => {
+                    const li = document.createElement("li");
+                    li.textContent = user.name;
+                    userListDiv.appendChild(li);
+               });
+              } else {
+                  userListDiv.innerHTML = "<p>共有中のユーザーはいません。</p>";
+              }
+          })
+          .catch(error => {
+              document.getElementById("shareUsersList").innerHTML = "<p>読み込みに失敗しました。</p>";
+              console.error("エラー:", error);
+          });
+  }
+  </script>
+  
 {% endblock %}
+
