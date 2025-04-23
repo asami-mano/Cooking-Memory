@@ -1,4 +1,23 @@
 {% extends 'base.html' %}
 {% block content %}
-<h1>マイリスト画面です</h1>
+
+{% for record in records %}
+  <div class="record">
+    {% if record.image_url %}
+        <img src="{{ record.image_url.url }}" alt="料理写真" />
+    {% else %}
+        <p>画像なし</p>
+        {% comment %} <img src="{% static 'images/no_image.png' %}" alt="画像なし" /> {% endcomment %}
+    {% endif %}
+
+    <button class="favorite-btn">
+      {% if record.is_favorite %}
+        ❤️
+      {% else %}
+        🤍
+      {% endif %}
+    </button>
+  </div>
+{% endfor %}
+
 {% endblock  %}

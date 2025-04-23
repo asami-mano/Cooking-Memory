@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block content %}
+
+{% for record in cooking_records %}
+  <div class="card">
+    <p><strong>日付：</strong> {{ record.date }}</p>
+    <p><strong>カテゴリ：</strong> {{ record.category.name }}</p>
+    <p><strong>難易度：</strong> {{ record.get_cooking_easiness_display }}</p>
+    <p><strong>お気に入り：</strong> {{ record.is_favorite|yesno:"★,-" }}</p>
+    <p><strong>メモ：</strong> {{ record.memo }}</p>
+    {% if record.image_url %}
+      <img src="{{ record.image_url.url }}" alt="料理画像" width="200">
+    {% endif %}
+  </div>
+{% empty %}
+  <p>記録はまだありません。</p>
+{% endfor %}
+
+{% endblock  %}
