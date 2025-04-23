@@ -1,0 +1,25 @@
+<!-- templates/cooking_records/record_form.html -->
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div>
+        {{ form.image_url.label }} {{ form.image_url }}
+    </div>
+    <div>
+      {{ form.date.label }} {{ form.date }}
+    </div>
+    <div>
+      {{ form.cooking_category.label }} {{ form.cooking_category }}
+      <a href="#" id="open-category-modal">＋新規作成</a>
+    </div>
+    <div>
+      {{ form.cooking_easiness.label }} {{ form.cooking_easiness }}
+    </div>
+    <div>
+      {{ form.is_favorite.label }} {{ form.is_favorite }}
+    </div>
+    <div>
+      {{ form.memo.label }} {{ form.memo }}
+    </div>
+    <button type="submit">登録</button>
+  </form>
+  
