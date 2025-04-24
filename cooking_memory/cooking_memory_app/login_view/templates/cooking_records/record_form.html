@@ -1,8 +1,36 @@
 {% extends 'base.html' %}
 {% block content %}
 
+<style>
+  .star-rating {
+    direction: rtl;
+    unicode-bidi: bidi-override;
+    display: inline-flex;
+  }
+  .star-rating input[type="radio"] {
+    display: none;
+  }
+  .star-rating label {
+    font-size: 25px;
+    color: #ccc;
+    cursor: pointer;
+  }
+  .star-rating input[type="radio"]:checked ~ label {
+    color:rgb(8, 6, 0);
+  }
+  .star-rating label:hover,
+  .star-rating label:hover ~ label {
+    color: #f5c518;
+  }
+  .easiness-labels {
+    margin-top: 5px;
+    font-size: 14px;
+  }
+</style>
+
 <form method="post" enctype="multipart/form-data">
   {% csrf_token %}
+
   <div>
       {{ form.image_url.label }} {{ form.image_url }}
   </div>
@@ -14,8 +42,22 @@
     <a href="#" id="open-category-modal">＋新規作成</a>
   </div>
   <div>
-    {{ form.cooking_easiness.label }} {{ form.cooking_easiness }}
-  </div>
+    <label>調理の手軽さ</label>
+    <div class="star-rating">
+      <input type="radio" id="easiness-3" name="cooking_easiness" value="2">
+      <label for="easiness-3">★</label>
+  
+      <input type="radio" id="easiness-2" name="cooking_easiness" value="1" checked>
+      <label for="easiness-2">★</label>
+  
+      <input type="radio" id="easiness-1" name="cooking_easiness" value="0">
+      <label for="easiness-1">★</label>
+    </div>
+    <div class="easiness-labels">
+      <span>★簡単</span>
+      <span>★★普通</span>
+      <span>★★★手間がかかる</span>
+    </div>
   <div>
     {{ form.is_favorite.label }} {{ form.is_favorite }}
   </div>
@@ -51,7 +93,7 @@
     e.preventDefault();
     const name = document.getElementById("new-category-name").value;
   
-    fetch("{% url 'cooking_records:create_cooking_category' %}", {
+    fetch("cooking_records/create_cooking_category/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -76,6 +118,7 @@
       }
     });
   });
+
   </script>
   
   {% endblock  %}

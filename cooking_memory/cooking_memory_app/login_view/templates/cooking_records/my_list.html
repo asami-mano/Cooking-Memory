@@ -10,7 +10,7 @@
         {% comment %} <img src="{% static 'images/no_image.png' %}" alt="画像なし" /> {% endcomment %}
     {% endif %}
 
-    <button class="favorite-btn">
+    <button class="favorite-btn" onclick="toggleFavorite({{ record.id }}, this)">
       {% if record.is_favorite %}
         ❤️
       {% else %}
@@ -19,5 +19,26 @@
     </button>
   </div>
 {% endfor %}
+
+<script>
+function toggleFavorite(recordId, btn) {
+  fetch(`/cooking_records/${recordId}/toggle_favorite/`, {
+    method: 'POST',
+    headers: {
+      'X-CSRFToken': '{{ csrf_token }}',
+      'Content-Type': 'application/json'
+    },
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.is_favorite) {
+      btn.textContent = '❤️';
+    } else {
+      btn.textContent = '🤍';
+    }
+  });
+}
+</script>
+
 
 {% endblock  %}
