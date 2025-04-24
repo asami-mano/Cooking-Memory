@@ -2,16 +2,51 @@
 {% block content %}
 
 <style>
+  form {
+      display: flex;
+      flex-direction: column;
+      align-items: center; /* 子要素（入力欄・ボタン）を中央に */
+      margin-top: 5%;
+  }
+
+  form div {
+      margin-bottom: 50px;
+      width: 100%;
+      max-width: 800px; /* 入力欄の幅を制限 */
+  }
+  label {
+      display: block;
+      font-size: 60px;
+  }
+
+  .form-group {
+    font-size: 60px;
+    font-weight: bold;
+    margin-bottom: 50px;
+  }
+
+  .form-group label {
+    margin-bottom: 6px;
+    font-weight: bold;
+  }
+
+  .form-group textarea {
+    width: 80%;
+    padding: 8px;
+    border-radius: 8px;
+  }
+
   .star-rating {
-    direction: rtl;
-    unicode-bidi: bidi-override;
-    display: inline-flex;
+    display: inline-flex;#横並びにする
+    gap: 4px;#星の間に4pxの隙間
+    direction: ltr;
+    font-size: 60px;
   }
   .star-rating input[type="radio"] {
     display: none;
   }
   .star-rating label {
-    font-size: 25px;
+    font-size: 100px;
     color: #ccc;
     cursor: pointer;
   }
@@ -22,10 +57,41 @@
   .star-rating label:hover ~ label {
     color: #f5c518;
   }
+
+  .easiness-labels {
+    font-size: 32px;
+    margin-top: 10px;
+    text-align: center;
+  }
+
+  .favorite-btn {
+    font-size: 100px;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  button[type="submit"] {
+    font-size: 60px;
+    padding: 10px 30px;
+}
+
+  button[type="submit"]:hover {
+    background-color: #ff7043;
+  }
+
   .easiness-labels {
     margin-top: 5px;
-    font-size: 14px;
+    font-size: 30px;
   }
+
+  #open-category-modal {
+    font-size: 30px;
+    color: gray;
+    margin-left: 10px;
+    text-decoration: none;
+  }
+
 </style>
 
 <form method="post" enctype="multipart/form-data">
@@ -34,36 +100,38 @@
   <div>
       {{ form.image_url.label }} {{ form.image_url }}
   </div>
-  <div>
+  <div class="form-group">
     {{ form.date.label }} {{ form.date }}
   </div>
-  <div>
+  <div class="form-group">
     {{ form.cooking_category.label }} {{ form.cooking_category }}
     <a href="#" id="open-category-modal">＋新規作成</a>
   </div>
-  <div>
+  <div class="form-group">
     <label>調理の手軽さ</label>
     <div class="star-rating">
       <input type="radio" id="easiness-3" name="cooking_easiness" value="2">
       <label for="easiness-3">★</label>
-  
+
       <input type="radio" id="easiness-2" name="cooking_easiness" value="1" checked>
       <label for="easiness-2">★</label>
-  
+
       <input type="radio" id="easiness-1" name="cooking_easiness" value="0">
       <label for="easiness-1">★</label>
     </div>
     <div class="easiness-labels">
-      <span>★簡単</span>
-      <span>★★普通</span>
-      <span>★★★手間がかかる</span>
+      <span>★簡単  ★★普通  ★★★手間がかかる</span>
     </div>
-  <div>
-    {{ form.is_favorite.label }} {{ form.is_favorite }}
   </div>
-  <div>
-    {{ form.memo.label }} {{ form.memo }}
+  <div class="form-group">
+    <label>お気に入り</label>
+    <button class="favorite-btn">🤍</button>
   </div>
+  <div class="form-group">
+    {{ form.memo.label }}<br> 
+    {{ form.memo }}
+  </div>
+
   <button type="submit">登録</button>
 </form>
 
