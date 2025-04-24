@@ -76,10 +76,6 @@
     padding: 10px 30px;
 }
 
-  button[type="submit"]:hover {
-    background-color: #ff7043;
-  }
-
   .easiness-labels {
     margin-top: 5px;
     font-size: 30px;
@@ -161,7 +157,7 @@
     e.preventDefault();
     const name = document.getElementById("new-category-name").value;
   
-    fetch("cooking_records/create_cooking_category/", {
+    fetch(`/cooking_records/create_category/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

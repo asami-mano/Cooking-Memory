@@ -43,6 +43,25 @@
     border: none;
     cursor: pointer;
   }
+
+  .floating-plus-btn {
+    position: fixed;
+    bottom: 40px;
+    right: 40px;
+    background-color: #e0e0e0;
+    color: #000000;
+    font-size: 60px;
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    text-align: center;
+    line-height: 100px;
+    text-decoration: none;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    transition: background-color 0.3s;
+    z-index: 1000;
+  }
+  
 </style>
 
 <div class="record-grid">
@@ -83,5 +102,7 @@
     });
   }
 </script>
+
+<a href="{% url 'cooking_records:cooking_record_create' %}" class="floating-plus-btn">＋</a>
 
 {% endblock  %}
