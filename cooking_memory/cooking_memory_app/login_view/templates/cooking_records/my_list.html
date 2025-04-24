@@ -1,44 +1,87 @@
 {% extends 'base.html' %}
 {% block content %}
 
-{% for record in records %}
-  <div class="record">
-    {% if record.image_url %}
-        <img src="{{ record.image_url.url }}" alt="料理写真" />
-    {% else %}
-        <p>画像なし</p>
-        {% comment %} <img src="{% static 'images/no_image.png' %}" alt="画像なし" /> {% endcomment %}
-    {% endif %}
+<style>
+  .record-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* 横に最大3枚 */
+    gap: 5px;
+    padding: 5px;
+    justify-items: center;
+  }
+  
+  .record img {
+    width: 100%;
+    height: auto;
+    max-width: 300px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+  
+  .record {
+    text-align: center;
+  }
 
-    <button class="favorite-btn" onclick="toggleFavorite({{ record.id }}, this)">
-      {% if record.is_favorite %}
-        ❤️
+  .image-container {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .image-container img {
+    width: 100%;
+    max-width: 300px;
+    border: 5px solid black; /* 黒枠をつける */
+    border-radius: 10px;
+  }
+  
+  .favorite-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 50px;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+</style>
+
+<div class="record-grid">
+{% for record in cooking_records %}
+  <div class="record">
+    <div class="image-container">
+      {% if record.image_url %}
+          <img src="{{ record.image_url.url }}" alt="料理写真" />
       {% else %}
-        🤍
+          <p>画像なし</p>
+          {% comment %} <img src="{% static 'images/no_image.png' %}" alt="画像なし" /> {% endcomment %}
       {% endif %}
-    </button>
+
+      <button class="favorite-btn" onclick="toggleFavorite({{ record.id }}, this)">
+        {% if record.is_favorite %}
+          ❤️
+        {% else %}
+          🤍
+        {% endif %}
+      </button>
+    </div>
   </div>
 {% endfor %}
+</div>
 
 <script>
-function toggleFavorite(recordId, btn) {
-  fetch(`/cooking_records/${recordId}/toggle_favorite/`, {
-    method: 'POST',
-    headers: {
-      'X-CSRFToken': '{{ csrf_token }}',
-      'Content-Type': 'application/json'
-    },
-  })
-  .then(res => res.json())
-  .then(data => {
-    if (data.is_favorite) {
-      btn.textContent = '❤️';
-    } else {
-      btn.textContent = '🤍';
-    }
-  });
-}
+  function toggleFavorite(recordId, btn) {
+    fetch(`/cooking_records/${recordId}/toggle_favorite/`, {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': '{{ csrf_token }}',
+        'Content-Type': 'application/json'
+      },
+    })
+    .then(res => res.json())
+    .then(data => {
+      btn.textContent = data.is_favorite ? '❤️' : '🤍';
+    });
+  }
 </script>
-
 
 {% endblock  %}
