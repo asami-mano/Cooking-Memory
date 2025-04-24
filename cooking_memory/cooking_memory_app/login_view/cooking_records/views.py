@@ -23,7 +23,7 @@ class CookingRecordCreateView(LoginRequiredMixin, CreateView):
     model = CookingRecord
     form_class = CookingRecordForm
     template_name = 'cooking_records/record_form.html'
-    success_url = reverse_lazy('my_list')  # マイリスト画面へ
+    success_url = reverse_lazy('cooking_records:my_list')  # マイリスト画面へ
 
     def form_valid(self, form):
         form.instance.user = self.request.user  # ユーザーを紐づける
