@@ -1,11 +1,14 @@
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import(
     ListView,CreateView,
 )
 from django.urls import reverse_lazy
-from .models import CookingRecord
+from .models import CookingRecord,CookingCategory
 from .forms import CookingRecordForm
+import json
 
 
 class MyListView(LoginRequiredMixin, ListView):
@@ -25,3 +28,13 @@ class CookingRecordCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.user = self.request.user  # ユーザーを紐づける
         return super().form_valid(form)
+    
+@csrf_exempt
+def create_cooking_category(request):
+    if request.method == "POST" and request.user.is_authenticated:
+        data = json.loads(request.body)
+        name = data.get("name")
+        if name:
+            category = CookingCategory.objects.create(user=request.user, name=name)
+            return JsonResponse({"success": True, "id": category.id, "name": category.name})
+    return JsonResponse({"success": False})
