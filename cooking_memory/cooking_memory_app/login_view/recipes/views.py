@@ -1,15 +1,30 @@
-from django.shortcuts import render
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import(
-    ListView,
-)
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
 from .models import Recipe
+from .forms import RecipeForm
 
+@login_required
+def recipe_list(request):
+    query = request.GET.get('q', '')
+    recipes = Recipe.objects.filter(user=request.user)
+    if query:
+        recipes = recipes.filter(name__icontains=query)
 
-class RecipeListView(LoginRequiredMixin, ListView):
-    model = Recipe
-    template_name = 'recipe_list.html'
-    context_object_name = 'recipes'
+    return render(request, 'recipes/recipe_list.html', {
+        'recipes': recipes,
+        'query': query
+    })
 
-    def get_queryset(self):
-        return Recipe.objects.filter(user=self.request.user).order_by('-updated_at')
+@login_required
+def add_recipe(request):
+    if request.method == 'POST':
+        form = RecipeForm(request.POST)
+        if form.is_valid():
+            recipe = form.save(commit=False)
+            recipe.user = request.user
+            recipe.save()
+            return redirect('recipe_list')
+    else:
+        form = RecipeForm()
+    
+    return render(request, 'recipes/add_recipe.html', {'form': form})

@@ -1,4 +1,87 @@
 {% extends 'base.html' %}
 {% block content %}
-<h1>レシピリスト画面です</h1>
-{% endblock  %}
+
+<style>
+    .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        {% comment %} background: #f5f5f5; {% endcomment %}
+        padding: 10px;
+        }
+    
+    .search-form {
+        display: flex;
+        width: 100%;
+        margin: 0 10px; /* 少し余白が欲しければ */
+}
+    
+    .search-form input {
+        font-size: 40px;
+        padding: 4px;
+        width: 90%;
+        box-sizing: border-box; /* パディング込みでも幅が崩れないように */
+        }
+    
+    .search-form button {
+        font-size: 50px;
+        padding: 5px 15px;
+        }
+        
+    .recipe-list {
+        list-style: none;
+        padding: 0;
+        }
+    
+    .recipe-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px;
+        border-bottom: 1px solid #ccc;
+        }
+    
+    .add-btn {
+        position: fixed;
+        bottom: 40px;
+        right: 40px;
+        background-color: #e0e0e0;
+        color: #000000;
+        font-size: 60px;
+        border-radius: 50%;
+        width: 100px;
+        height: 100px;
+        text-align: center;
+        line-height: 100px;
+        text-decoration: none;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        transition: background-color 0.3s;
+        z-index: 1000;
+        }
+    
+      
+</style>
+
+<div class="header">
+    <form method="get" class="search-form">
+      <input type="text" name="q" value="{{ query }}" placeholder="レシピを検索">
+      <button type="submit">🔍</button>
+    </form>
+  </div>
+  
+  <ul class="recipe-list">
+    {% for recipe in recipes %}
+      <li class="recipe-item">
+        <div class="recipe-info">
+          <p class="recipe-name">{{ recipe.name }}</p>
+          <a href="{{ recipe.recipe_url }}" target="_blank">{{ recipe.recipe_url }}</a>
+        </div>
+        <a href="{{ recipe.recipe_url }}" target="_blank" class="arrow">➤</a>
+      </li>
+    {% empty %}
+      <li>レシピが見つかりませんでした。</li>
+    {% endfor %}
+  </ul>
+  
+  <a href="{% url 'recipes:add_recipe' %}" class="add-btn">＋</a>
+  
+  {% endblock  %}
