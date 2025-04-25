@@ -29,6 +29,7 @@
         }
         
     .recipe-list {
+        font-size: 40px;
         list-style: none;
         padding: 0;
         }
@@ -36,10 +37,30 @@
     .recipe-item {
         display: flex;
         justify-content: space-between;
+        align-items: center;
         padding: 10px;
         border-bottom: 1px solid #ccc;
         }
     
+    .recipe-info {
+        max-width: 900px; /* 例として親要素の幅を設定 */
+        }        
+
+    .recipe-info a,
+    .arrow {
+        font-size: 30px;
+        color: gray;
+        text-decoration: none; /* 下線消したい場合 */
+        }
+    
+    .recipe-info a {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: inline-block;
+        max-width: 90%;
+        }
+
     .add-btn {
         position: fixed;
         bottom: 40px;
@@ -75,7 +96,7 @@
           <p class="recipe-name">{{ recipe.name }}</p>
           <a href="{{ recipe.recipe_url }}" target="_blank">{{ recipe.recipe_url }}</a>
         </div>
-        <a href="{{ recipe.recipe_url }}" target="_blank" class="arrow">➤</a>
+        <a href="{{ recipe.recipe_url }}" target="_blank" class="arrow">＞</a>
       </li>
     {% empty %}
       <li>レシピが見つかりませんでした。</li>

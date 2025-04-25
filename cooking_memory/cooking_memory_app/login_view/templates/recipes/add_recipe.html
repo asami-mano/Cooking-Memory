@@ -1,12 +1,78 @@
 {% extends 'base.html' %}
 {% block content %}
-<h2>レシピを追加</h2>
 
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">リストに追加</button>
-</form>
+<style>
+    form {
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* 子要素（入力欄・ボタン）を中央に */
+        margin-top: 5%;
+    }
+  
+    form div {
+        margin-bottom: 50px;
+        width: 100%;
+        max-width: 800px; /* 入力欄の幅を制限 */
+    }
+    label {
+        display: block;
+        font-size: 60px;
+    }
 
-<a href="{% url 'recipe_list' %}">← 戻る</a>
+    .input-large {
+        font-size: 50px;
+        padding: 10px;
+        width: 100%;
+        {% comment %} margin-top: 5px;
+        margin-bottom: 10px;{% endcomment %}
+      }
+      
+    .btn-large {
+        font-size: 60px;
+        padding: 10px 30px;
+      }
+      
+    .btn-submit {
+        font-size: 60px;
+        padding: 10px 30px;
+      }
+    
+</style>
+  
+<form method="post" class="form-container">
+    {% csrf_token %}
+    <div class="form-group">
+      <label>URL:</label><br>
+      <input type="text" name="recipe_url" id="recipe-url" required class="input-large">
+    </div>
+    <button type="button" onclick="fetchTitle()" class="btn-large">レシピ名取得</button><br><br><br>
+
+    <div class="form-group">
+      <label>レシピ名:</label><br>
+      <input type="text" name="name" id="recipe-name" required class="input-large">
+    </div>
+    <button type="submit" class="btn-submit">リストに追加</button>
+  </form>
+  
+  <script>
+  function fetchTitle() {
+    const url = document.getElementById('recipe-url').value;
+  
+    if (!url) {
+      alert("URLを入力してください");
+      return;
+    }
+  
+    const xhr = new XMLHttpRequest();
+    xhr.onload = function () {
+      const doc = this.responseXML;
+      const title = doc ? (doc.querySelector('title')?.textContent || 'タイトルなし') : '取得失敗';
+      document.getElementById('recipe-name').value = title;
+    };
+    xhr.open("GET", url, true);
+    xhr.responseType = "document";
+    xhr.send();
+  }
+  </script>
+  
 {% endblock %}

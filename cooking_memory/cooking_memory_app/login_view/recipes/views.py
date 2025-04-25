@@ -18,13 +18,10 @@ def recipe_list(request):
 @login_required
 def add_recipe(request):
     if request.method == 'POST':
-        form = RecipeForm(request.POST)
-        if form.is_valid():
-            recipe = form.save(commit=False)
-            recipe.user = request.user
-            recipe.save()
-            return redirect('recipe_list')
-    else:
-        form = RecipeForm()
+        name = request.POST.get('name')
+        url = request.POST.get('recipe_url')
+        if name and url:
+            Recipe.objects.create(name=name, recipe_url=url, user=request.user)
+            return redirect('recipes:recipe_list')
+    return render(request, 'recipes/add_recipe.html')
     
-    return render(request, 'recipes/add_recipe.html', {'form': form})
