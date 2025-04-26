@@ -8,7 +8,7 @@ from django.views.generic import(
     ListView,CreateView,
 )
 from django.urls import reverse_lazy
-from .models import CookingRecord,CookingCategory
+from .models import CookingRecord,CookingCategory,CookingRecordRecipe,Recipe
 from .forms import CookingRecordForm
 import json
 
@@ -25,11 +25,24 @@ class CookingRecordCreateView(LoginRequiredMixin, CreateView):
     model = CookingRecord
     form_class = CookingRecordForm
     template_name = 'cooking_records/record_form.html'
-    success_url = reverse_lazy('cooking_records:my_list')  # マイリスト画面へ
+    success_url = reverse_lazy('cooking_records:my_list')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['recipes'] = Recipe.objects.filter(user=self.request.user)
+        return context
 
     def form_valid(self, form):
         form.instance.user = self.request.user  # ユーザーを紐づける
-        return super().form_valid(form)
+        response = super().form_valid(form)
+    
+        recipe_ids = self.request.POST.getlist('recipes')
+        for rid in recipe_ids:
+            CookingRecordRecipe.objects.create(
+                cooking_record=self.object,  # 作ったばかりのレコード
+                recipe_id=rid
+            )
+        return response
     
 @csrf_exempt
 def create_cooking_category(request):
@@ -49,3 +62,4 @@ def toggle_favorite(request, pk):
         record.save()
         return JsonResponse({'is_favorite': record.is_favorite})
     return JsonResponse({'error': 'Invalid request'}, status=400)
+

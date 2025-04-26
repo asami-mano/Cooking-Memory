@@ -1,27 +1,32 @@
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
+from django.views.generic import ListView,CreateView
+from django.urls import reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Recipe
 from .forms import RecipeForm
 
-@login_required
-def recipe_list(request):
-    query = request.GET.get('q', '')
-    recipes = Recipe.objects.filter(user=request.user)
-    if query:
-        recipes = recipes.filter(name__icontains=query)
+class RecipeListView(LoginRequiredMixin, ListView):
+    model = Recipe
+    template_name = 'recipes/recipe_list.html'
+    context_object_name = 'recipes'
 
-    return render(request, 'recipes/recipe_list.html', {
-        'recipes': recipes,
-        'query': query
-    })
+    def get_queryset(self):
+        query = self.request.GET.get('q', '')
+        queryset = Recipe.objects.filter(user=self.request.user)
+        if query:
+            queryset = queryset.filter(name__icontains=query)
+        return queryset
 
-@login_required
-def add_recipe(request):
-    if request.method == 'POST':
-        name = request.POST.get('name')
-        url = request.POST.get('recipe_url')
-        if name and url:
-            Recipe.objects.create(name=name, recipe_url=url, user=request.user)
-            return redirect('recipes:recipe_list')
-    return render(request, 'recipes/add_recipe.html')
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['query'] = self.request.GET.get('q', '')
+        return context
     
+class RecipeCreateView(LoginRequiredMixin, CreateView):
+    model = Recipe
+    form_class = RecipeForm
+    template_name = 'recipes/add_recipe.html'
+    success_url = reverse_lazy('recipes:recipe_list')
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)    

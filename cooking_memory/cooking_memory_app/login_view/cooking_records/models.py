@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 from django.contrib.auth import get_user_model
 import datetime
+from recipes.models import Recipe
 
 User=get_user_model()
 
@@ -23,7 +24,6 @@ class CookingRecord(models.Model):
         (1, '普通'),
         (2, '手間がかかる'),
     ]
-
     user = models.ForeignKey(User, on_delete=models.PROTECT)
     cooking_category = models.ForeignKey('CookingCategory', on_delete=models.SET_NULL, null=True, blank=True,verbose_name='カテゴリ')
     image_url = models.ImageField(upload_to='cooking_records/', blank=False, null=True)
@@ -37,3 +37,8 @@ class CookingRecord(models.Model):
     def __str__(self):
         return f"{self.date} の献立記録"
     
+class CookingRecordRecipe(models.Model):
+    cooking_record = models.ForeignKey(CookingRecord, on_delete=models.CASCADE)
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)

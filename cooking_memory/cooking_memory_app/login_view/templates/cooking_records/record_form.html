@@ -81,11 +81,20 @@
     font-size: 30px;
   }
 
+  .btn-outline-secondary{
+    font-size: 50px;
+    padding: 12px 24px;
+  }
+
   #open-category-modal {
     font-size: 30px;
     color: gray;
     margin-left: 10px;
     text-decoration: none;
+  }
+
+  #selected-recipes {
+    margin-top: 10px;
   }
 
 </style>
@@ -127,7 +136,16 @@
     {{ form.memo.label }}<br> 
     {{ form.memo }}
   </div>
-
+  <div class="form-group">
+    <label>参考レシピ</label>
+    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#recipeModal">
+      ＋ レシピリスト
+    </button>
+  </div>
+  <div id="selected-recipes">
+    <!-- JSで選択されたレシピをここに表示 -->
+    <ul id="selectedRecipesList" class="list-group"></ul>
+  </div>
   <button type="submit">登録</button>
 </form>
 
@@ -140,6 +158,34 @@
     <button type="submit">作成</button>
     <button type="button" onclick="closeModal()" style="position:absolute; top:5px; right:10px; border:none; background:none; font-size:20px; cursor:pointer;">✖️</button>
   </form>
+</div>
+
+<div class="modal fade" id="recipeModal" tabindex="-1">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">レシピを選択</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        {% if recipes %}
+          {% for recipe in recipes %}
+            <div>
+              <input type="checkbox" name="recipes" value="{{ recipe.id }}" data-name="{{ recipe.name }}"> {{ recipe.name }}
+            </div>
+          {% endfor %}
+        {% else %}
+          <p>レシピがありません</p>
+        {% endif %}
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="addRecipes">レシピを追加</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -181,6 +227,32 @@
         alert("作成に失敗しました");
       }
     });
+  });
+
+  document.getElementById('addRecipes').addEventListener('click', function() {
+    // チェックされたレシピを取得
+    const checkedBoxes = document.querySelectorAll('input[name="recipes"]:checked');
+  
+    // 追加する先のリスト
+    const selectedList = document.getElementById('selectedRecipesList');
+  
+    // まず、リストをクリア（※必要に応じて）
+    selectedList.innerHTML = '';
+  
+    // チェックされたものを全部リストに追加
+    checkedBoxes.forEach(box => {
+      const recipeId = box.value;
+      const recipeName = box.dataset.name; // レシピ名を取る
+  
+      const li = document.createElement('li');
+      li.className = 'list-group-item';
+      li.textContent = recipeName;
+      selectedList.appendChild(li);
+    });
+  
+    // モーダルを閉じる
+    const recipeModal = bootstrap.Modal.getInstance(document.getElementById('recipeModal'));
+    recipeModal.hide();
   });
 
   </script>
