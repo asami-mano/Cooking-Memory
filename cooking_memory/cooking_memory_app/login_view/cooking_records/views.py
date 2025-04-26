@@ -33,15 +33,20 @@ class CookingRecordCreateView(LoginRequiredMixin, CreateView):
         return context
 
     def form_valid(self, form):
+        print(self.request.POST)
         form.instance.user = self.request.user  # ユーザーを紐づける
         response = super().form_valid(form)
-    
-        recipe_ids = self.request.POST.getlist('recipes')
+
+        # hidden input からレシピIDを取得
+        recipe_ids_str = self.request.POST.get('recipes', '')
+        recipe_ids = recipe_ids_str.split(',') if recipe_ids_str else []
+
         for rid in recipe_ids:
-            CookingRecordRecipe.objects.create(
-                cooking_record=self.object,  # 作ったばかりのレコード
-                recipe_id=rid
-            )
+            if rid:  # 念のため空チェック
+                CookingRecordRecipe.objects.create(
+                    cooking_record=self.object,  # 作ったばかりのレコード
+                    recipe_id=rid
+                )
         return response
     
 @csrf_exempt

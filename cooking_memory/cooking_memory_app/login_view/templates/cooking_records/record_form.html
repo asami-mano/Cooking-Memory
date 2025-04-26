@@ -143,9 +143,13 @@
     </button>
   </div>
   <div id="selected-recipes">
-    <!-- JSで選択されたレシピをここに表示 -->
+    <input type="hidden" name="recipes" id="selectedRecipeIds">
     <ul id="selectedRecipesList" class="list-group"></ul>
   </div>
+
+  <!-- hiddenフィールド用（最初は空） -->
+  <div id="selectedRecipesHiddenArea" style="display:none;"></div>
+
   <button type="submit">登録</button>
 </form>
 
@@ -235,21 +239,36 @@
   
     // 追加する先のリスト
     const selectedList = document.getElementById('selectedRecipesList');
-  
-    // まず、リストをクリア（※必要に応じて）
+    const selectedIds = [];
+
+    // まず、リストをクリア
     selectedList.innerHTML = '';
-  
-    // チェックされたものを全部リストに追加
+
+    // チェックされたものを全部リストとhidden inputに追加
     checkedBoxes.forEach(box => {
       const recipeId = box.value;
-      const recipeName = box.dataset.name; // レシピ名を取る
+      const recipeName = box.dataset.name;// レシピ名を取る
   
+      selectedIds.push(recipeId);
+
+      // 画面表示用リスト
       const li = document.createElement('li');
       li.className = 'list-group-item';
       li.textContent = recipeName;
       selectedList.appendChild(li);
     });
   
+    // 選択したレシピIDを hidden input にまとめてセット
+    const hiddenArea = document.getElementById('selectedRecipesHiddenArea');
+    hiddenArea.innerHTML = '';
+    selectedIds.forEach(id => {
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = 'recipes';
+      input.value = id;
+      hiddenArea.appendChild(input);
+    });
+
     // モーダルを閉じる
     const recipeModal = bootstrap.Modal.getInstance(document.getElementById('recipeModal'));
     recipeModal.hide();
