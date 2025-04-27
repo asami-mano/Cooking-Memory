@@ -2,8 +2,16 @@
 {% block content %}
 
 <div>
-  <img src="{{ record.image_url.url }}" alt="料理写真" />
-
+  <div class="image-container" style="position: relative;">
+    <img src="{{ record.image_url.url }}" alt="料理写真" style="width: 100%; height: auto;">
+    <a class="favorite-icon" style="position: absolute; top: 10px; right: 10px; font-size: 50px; background: none; border: none;">  
+      {% if record.is_favorite %}
+        ❤️
+      {% else %}
+        🤍
+      {% endif %}
+    </a>
+  </div>
 </div>
 
 <p>日付：{{ record.date }}</p>
@@ -28,7 +36,7 @@
 <div id="deleteModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5);">
   <div style="background: white; padding: 20px; margin: 100px auto; width: 300px; border-radius: 8px; text-align: center;">
     <p>この料理メモを削除しますか？</p>
-    <form method="POST" action="{% url 'cooking_records:cooking_record_delete' cooking_record.pk %}">
+    <form method="POST" action="{% url 'cooking_records:cooking_record_delete' record.pk %}">
       {% csrf_token %}
       <button type="submit" style="background-color: red; color: white; margin-right: 10px;">はい</button>
       <button type="button" id="cancelBtn">いいえ</button>
