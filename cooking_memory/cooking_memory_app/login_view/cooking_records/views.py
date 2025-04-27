@@ -38,9 +38,7 @@ class CookingRecordCreateView(LoginRequiredMixin, CreateView):
         response = super().form_valid(form)
 
         # hidden input からレシピIDを取得
-        recipe_ids_str = self.request.POST.get('recipes', '')
-        recipe_ids = recipe_ids_str.split(',') if recipe_ids_str else []
-
+        recipe_ids = self.request.POST.getlist('recipes')
         for rid in recipe_ids:
             if rid:  # 念のため空チェック
                 CookingRecordRecipe.objects.create(

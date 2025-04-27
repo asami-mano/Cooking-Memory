@@ -39,6 +39,6 @@ class CookingRecord(models.Model):
     
 class CookingRecordRecipe(models.Model):
     cooking_record = models.ForeignKey(CookingRecord, on_delete=models.CASCADE)
-    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
+    recipe = models.ForeignKey('recipes.Recipe', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
