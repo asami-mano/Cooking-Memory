@@ -102,10 +102,13 @@
 <form method="post" enctype="multipart/form-data">
   {% csrf_token %}
 
-  <div>
-      {{ form.image_url.label }} {{ form.image_url }}
+  <div id="photoPreviewArea" style="margin-top: 10px;">
+    <img id="photoPreview" src="" alt="プレビュー" style="max-width: 100%; display: none;">
   </div>
-  <div class="form-group">
+  <button type="button" id="openPhotoModal">📷</button>
+
+  <div>
+      <div class="form-group">
     {{ form.date.label }} {{ form.date }}
   </div>
   <div class="form-group">
@@ -154,6 +157,29 @@
 </form>
 
 <!-- モーダル本体 -->
+<div class="modal" id="photoModal" style="display:none;">
+  <div class="modal-content">
+    <button id="closeModal" class="close-btn" style="position:absolute; top:5px; right:10px; border:none; background:none; font-size:20px; cursor:pointer;">✖️</button>
+
+    <!-- カメラプレビュー -->
+    <div id="cameraPreview" style="display:none;">
+      <video id="video" autoplay playsinline></video><br>
+      <button id="takePhoto">📷</button>
+    </div>
+
+    <!-- アルバム選択 -->
+    <div id="albumSelect">
+      <input type="file" id="fileInput" accept="image/*">
+    </div>
+
+    <!-- タブ切り替え -->
+    <div class="tab-buttons">
+      <button id="albumTab" type="button">アルバム</button>
+      <button id="cameraTab" type="button">カメラ</button>
+    </div>
+  </div>
+</div>
+
 <div id="category-modal" style="display:none; position:fixed; top:30%; left:30%; background:#fff; border:1px solid #ccc; padding:20px;">
   <h3>新規カテゴリ</h3>
   <form id="category-form">
@@ -193,6 +219,102 @@
 </div>
 
 <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const photoModal = document.getElementById('photoModal');
+    const closeModalBtn = document.getElementById('closeModal');
+    const albumTab = document.getElementById('albumTab');
+    const cameraTab = document.getElementById('cameraTab');
+    const albumSelectArea = document.getElementById('albumSelect');
+    const cameraPreviewArea = document.getElementById('cameraPreview');
+    const fileInput = document.getElementById('fileInput');
+    const video = document.getElementById('video');
+    const takePhotoBtn = document.getElementById('takePhoto');
+    const previewImg = document.getElementById('photoPreview');
+
+    let stream; // カメラのストリーム保存用
+  
+    // 📷ボタンを押したらモーダルを開く
+    document.getElementById('openPhotoModal').addEventListener('click', function() {
+      photoModal.style.display = 'block';
+      showCamera(); // デフォルトはカメラモードで開く
+    });
+  
+    // 閉じる
+    closeModalBtn.addEventListener('click', function() {
+      photoModal.style.display = 'none';
+      stopCamera();
+    });
+  
+    // タブ切り替え
+    albumTab.addEventListener('click', showAlbum);
+    cameraTab.addEventListener('click', showCamera);
+  
+    function showAlbum() {
+      albumSelectArea.style.display = 'block';
+      cameraPreviewArea.style.display = 'none';
+      stopCamera();
+    }
+  
+    async function showCamera() {
+      albumSelectArea.style.display = 'none';
+      cameraPreviewArea.style.display = 'block';
+      
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        video.srcObject = stream;
+      } catch (err) {
+        console.error('カメラ起動エラー:', err);
+        alert('カメラを利用できません');
+        showAlbum();
+      }
+    }
+  
+    function stopCamera() {
+      if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+        stream = null;
+      }
+    }
+  
+    // アルバムから選んだときのプレビュー表示
+    fileInput.addEventListener('change', function(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          previewImg.src = e.target.result;
+          previewImg.style.display = 'block'; // 表示させる
+        };
+        reader.readAsDataURL(file);
+    
+        photoModal.style.display = 'none';
+      }
+    });
+    
+    // カメラで撮ったときのプレビュー表示
+    takePhotoBtn.addEventListener('click', function() {
+      if (video.readyState < 2) { // HAVE_CURRENT_DATA未満ならまだカメラ映ってない
+        alert('カメラがまだ準備できてないよ！');
+        return;
+      }
+      
+      const canvas = document.createElement('canvas');
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+    
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    
+      const dataUrl = canvas.toDataURL('image/jpeg');
+
+      previewImg.src = dataUrl;
+      previewImg.style.display = 'block'; // 表示させる
+  
+      photoModal.style.display = 'none';
+      stopCamera();
+    });
+  });
+
   document.getElementById("open-category-modal").addEventListener("click", function(e) {
     e.preventDefault();
     document.getElementById("category-modal").style.display = "block";
@@ -274,6 +396,6 @@
     recipeModal.hide();
   });
 
-  </script>
+</script>
   
   {% endblock  %}
