@@ -5,7 +5,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.views.generic import(
-    ListView,CreateView,
+    ListView,CreateView,DetailView,DeleteView
 )
 from django.urls import reverse_lazy
 from .models import CookingRecord,CookingCategory,CookingRecordRecipe,Recipe
@@ -66,3 +66,12 @@ def toggle_favorite(request, pk):
         return JsonResponse({'is_favorite': record.is_favorite})
     return JsonResponse({'error': 'Invalid request'}, status=400)
 
+class CookingRecordDetailView(DetailView):
+    model = CookingRecord
+    template_name = 'cooking_records/record_detail.html'
+    context_object_name = 'record'# テンプレートで使う変数名（record）
+    
+class CookingRecordDeleteView(DeleteView):
+    model = CookingRecord
+    template_name = 'cooking_record_confirm_delete.html'  # 使わないけど書く
+    success_url = reverse_lazy('cooking_records:my_list')

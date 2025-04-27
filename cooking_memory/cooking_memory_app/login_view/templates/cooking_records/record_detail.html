@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div>
+  <img src="{{ record.image_url.url }}" alt="料理写真" />
+
+</div>
+
+<p>日付：{{ record.date }}</p>
+<p>カテゴリ：{{ record.category.name }}</p>
+<p>調理の手軽さ：
+  {% if record.cooking_easiness == 0 %}簡単
+  {% elif record.cooking_easiness == 1 %}普通
+  {% else %}手間がかかる
+  {% endif %}
+</p>
+<p>メモ：{{ record.memo }}</p>
+
+<div>
+  <h3>参考レシピ</h3>
+  {% for recipe in record.recipe_list.all %}
+    <a href="{{ recipe.recipe_url }}" target="_blank">{{ recipe.name }}</a><br>
+  {% endfor %}
+</div>
+<button id="deleteBtn" style="background-color: red; color: white; padding: 10px 20px; border: none; border-radius: 5px;">削除</button>
+
+<!-- モーダル -->
+<div id="deleteModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5);">
+  <div style="background: white; padding: 20px; margin: 100px auto; width: 300px; border-radius: 8px; text-align: center;">
+    <p>この料理メモを削除しますか？</p>
+    <form method="POST" action="{% url 'cooking_records:cooking_record_delete' cooking_record.pk %}">
+      {% csrf_token %}
+      <button type="submit" style="background-color: red; color: white; margin-right: 10px;">はい</button>
+      <button type="button" id="cancelBtn">いいえ</button>
+    </form>
+  </div>
+</div>
+
+<script>
+  const deleteBtn = document.getElementById('deleteBtn');
+  const deleteModal = document.getElementById('deleteModal');
+  const cancelBtn = document.getElementById('cancelBtn');
+
+  deleteBtn.addEventListener('click', function() {
+    deleteModal.style.display = 'block';
+  });
+
+  cancelBtn.addEventListener('click', function() {
+    deleteModal.style.display = 'none';
+  });
+</script>
+
+{% endblock  %}

@@ -69,7 +69,11 @@
   <div class="record">
     <div class="image-container">
       {% if record.image_url %}
+      <div>
+        <a href="{% url 'cooking_records:record_detail' record.id %}">
           <img src="{{ record.image_url.url }}" alt="料理写真" />
+        </a>
+      </div>
       {% else %}
           <p>画像なし</p>
           {% comment %} <img src="{% static 'images/no_image.png' %}" alt="画像なし" /> {% endcomment %}
