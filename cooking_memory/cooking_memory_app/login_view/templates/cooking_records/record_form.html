@@ -133,6 +133,13 @@
   </div>
   <div class="form-group">
     <label>お気に入り</label>
+    {% comment %} <button type="button" class="favorite-btn" data-url="{% url 'cooking_records:toggle_favorite' pk=record.id %}">
+      {% if record.is_favorite %}
+        ❤️
+      {% else %}
+        🤍
+      {% endif %}
+    </button> {% endcomment %}
     <button class="favorite-btn">🤍</button>
   </div>
   <div class="form-group">
@@ -352,6 +359,36 @@
       } else {
         alert("作成に失敗しました");
       }
+    });
+  });
+
+  // お気に入りボタン切り替え
+  document.addEventListener('DOMContentLoaded', function() {
+    const favoriteBtns = document.querySelectorAll('.favorite-btn');
+  
+    favoriteBtns.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        const url = btn.dataset.url;
+  
+        fetch(url, {
+          method: 'POST',
+          headers: {
+            'X-CSRFToken': '{{ csrf_token }}',  // Django用にCSRFトークンを送る
+            'Content-Type': 'application/json',
+          },
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.is_favorite) {
+            btn.innerHTML = '❤️';
+          } else {
+            btn.innerHTML = '🤍';
+          }
+        })
+        .catch(error => {
+          console.error('エラー:', error);
+        });
+      });
     });
   });
 

@@ -1,6 +1,7 @@
+from django.views import View
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from django.shortcuts import render,get_object_or_404
+from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
@@ -57,14 +58,21 @@ def create_cooking_category(request):
             return JsonResponse({"success": True, "id": category.id, "name": category.name})
     return JsonResponse({"success": False})
 
-@login_required
-def toggle_favorite(request, pk):
-    if request.method == 'POST':
+class CookingRecordToggleFavoriteView(LoginRequiredMixin, View):
+    def post(self, request, pk):
         record = get_object_or_404(CookingRecord, pk=pk, user=request.user)
         record.is_favorite = not record.is_favorite
         record.save()
         return JsonResponse({'is_favorite': record.is_favorite})
-    return JsonResponse({'error': 'Invalid request'}, status=400)
+
+# @login_required
+# def toggle_favorite(request, pk):
+#     if request.method == 'POST':
+#         record = get_object_or_404(CookingRecord, pk=pk, user=request.user)
+#         record.is_favorite = not record.is_favorite
+#         record.save()
+#         return JsonResponse({'is_favorite': record.is_favorite})
+#     return JsonResponse({'error': 'Invalid request'}, status=400)
 
 class CookingRecordDetailView(DetailView):
     model = CookingRecord
