@@ -1,0 +1,96 @@
+@charset "ytf-8"
+
+;form {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 子要素（入力欄・ボタン）を中央に */
+    margin-top: 5%;
+}
+
+form div {
+    margin-bottom: 50px;
+    width: 100%;
+    max-width: 800px; /* 入力欄の幅を制限 */
+}
+label {
+    display: block;
+    font-size: 60px;
+}
+
+.form-group {
+  font-size: 60px;
+  font-weight: bold;
+  margin-bottom: 50px;
+}
+
+.form-group label {
+  margin-bottom: 6px;
+  font-weight: bold;
+}
+
+.form-group textarea {
+  width: 80%;
+  padding: 8px;
+  border-radius: 8px;
+}
+
+.star-rating {
+  display: inline-flex;#横並びにする
+  gap: 4px;#星の間に4pxの隙間
+  direction: ltr;
+  font-size: 60px;
+}
+.star-rating input[type="radio"] {
+  display: none;
+}
+.star-rating label {
+  font-size: 100px;
+  color: #ccc;
+  cursor: pointer;
+}
+.star-rating input[type="radio"]:checked ~ label {
+  color:rgb(8, 6, 0);
+}
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+  color: #f5c518;
+}
+
+.easiness-labels {
+  font-size: 32px;
+  margin-top: 10px;
+  text-align: center;
+}
+
+.favorite-btn {
+  font-size: 100px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+button[type="submit"] {
+  font-size: 60px;
+  padding: 10px 30px;
+}
+
+.easiness-labels {
+  margin-top: 5px;
+  font-size: 30px;
+}
+
+.btn-outline-secondary{
+  font-size: 50px;
+  padding: 12px 24px;
+}
+
+#open-category-modal {
+  font-size: 30px;
+  color: gray;
+  margin-left: 10px;
+  text-decoration: none;
+}
+
+#selected-recipes {
+  margin-top: 10px;
+}

@@ -50,11 +50,6 @@ class CookingRecordCreateView(LoginRequiredMixin, CreateView):
     
 class CreateToggleFavoriteView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
-        data = json.loads(request.body)
-        record_id = data.get('record_id')
-        is_favorite = data.get('is_favorite')  # 送信された`is_favorite`の値
-
-        if record_id is not None:
             try:
                 # リクエストボディの取得
                 data = json.loads(request.body)
@@ -63,13 +58,19 @@ class CreateToggleFavoriteView(LoginRequiredMixin, View):
                 record_id = data.get('record_id')
                 is_favorite = data.get('is_favorite')
                 
+                if record_id is None or is_favorite is None:
+                    return JsonResponse({'error': 'Invalid data'}, status=400)
+                
                 record = CookingRecord.objects.get(id=record_id, user=request.user)
                 record.is_favorite = is_favorite
                 record.save()
+                
                 return JsonResponse({'is_favorite': record.is_favorite})
+            
             except CookingRecord.DoesNotExist:
                 return JsonResponse({'error': 'Record not found'}, status=404)
-        return JsonResponse({'error': 'Invalid request'}, status=400)
+            except json.JSONDecodeError:
+                return JsonResponse({'error': 'Invalid request'}, status=400)
     
 class CreateCookingCategoryView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):

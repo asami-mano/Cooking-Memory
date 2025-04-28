@@ -119,14 +119,15 @@
   </div>
   {% endif %}
 
+  <!-- ここに隠しfileInputを設置 -->
+  <input type="file" id="fileInput" name="image_url" accept="image/*" style="display: none;">
 
   <div id="photoPreviewArea" style="margin-top: 10px;">
     <img id="photoPreview" src="" alt="プレビュー" style="max-width: 100%; display: none;">
   </div>
   <button type="button" id="openPhotoModal">📷</button>
 
-  <div>
-      <div class="form-group">
+  <div class="form-group">
     {{ form.date.label }} {{ form.date }}
   </div>
   <div class="form-group">
@@ -151,7 +152,7 @@
   </div>
   <div class="form-group">
     <label>お気に入り</label>
-    <button class="favorite-btn" id="favorite-btn">
+    <button class="favorite-btn" id="favorite-btn" data-is-favorite="false">
       🤍
     </button>
   </div>
@@ -189,7 +190,7 @@
 
     <!-- アルバム選択 -->
     <div id="albumSelect">
-      <input type="file" id="fileInput" accept="image/*">
+      <button id="selectFromAlbum">アルバムから選ぶ</button>
     </div>
 
     <!-- タブ切り替え -->
@@ -250,6 +251,7 @@
     const video = document.getElementById('video');
     const takePhotoBtn = document.getElementById('takePhoto');
     const previewImg = document.getElementById('photoPreview');
+    const selectFromAlbumBtn = document.getElementById('selectFromAlbum');
 
     let stream; // カメラのストリーム保存用
   
@@ -261,6 +263,7 @@
   
     // 閉じる
     closeModalBtn.addEventListener('click', function() {
+      document.activeElement.blur();  // フォーカスを外す
       photoModal.style.display = 'none';
       stopCamera();
     });
@@ -296,7 +299,12 @@
       }
     }
   
-    // アルバムから選んだときのプレビュー表示
+    // 📷 アルバムから選ぶボタン押したらfileInputをクリック
+    selectFromAlbumBtn.addEventListener('click', function() {
+      fileInput.click();
+    });
+
+    // fileInputでファイル選んだらプレビュー表示
     fileInput.addEventListener('change', function(event) {
       const file = event.target.files[0];
       if (file) {
@@ -306,7 +314,6 @@
           previewImg.style.display = 'block'; // 表示させる
         };
         reader.readAsDataURL(file);
-    
         photoModal.style.display = 'none';
       }
     });
@@ -325,11 +332,25 @@
       const ctx = canvas.getContext('2d');
       ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
     
+      // 1. カメラ画像を base64形式で取得
       const dataUrl = canvas.toDataURL('image/jpeg');
-
+      // プレビュー表示
       previewImg.src = dataUrl;
       previewImg.style.display = 'block'; // 表示させる
   
+      // 2. base64をBlobに変換
+      fetch(dataUrl)
+      .then(res => res.blob())
+      .then(blob => {
+        // 3. BlobからFileオブジェクトを作る
+        const file = new File([blob], "camera_photo.jpg", { type: "image/jpeg" });
+
+        // 4. 手動でfileInputにセットする
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(file);
+        fileInput.files = dataTransfer.files;
+      });
+
       photoModal.style.display = 'none';
       stopCamera();
     });
@@ -378,33 +399,47 @@
   // お気に入りボタン切り替え
   document.addEventListener('DOMContentLoaded', function() {
     const favoriteBtn = document.querySelector('.favorite-btn');
-    let isFavorite = false;  // 初期状態（新規作成の場合）
 
     favoriteBtn.addEventListener('click', function(event) {
       event.preventDefault();  // ボタンのデフォルトの動作（フォーム送信等）を防ぐ
+      
+      // ボタンに持たせたデータ属性から現在の状態を取得
+      let isFavorite = favoriteBtn.dataset.isFavorite === 'true';
+
+      // 状態をトグル（反転）させる
       isFavorite = !isFavorite;  // 状態を切り替え
 
-      // 新規作成の場合、API呼び出し
-      fetch(`/cooking_records/create_toggle_favorite/`, {  // DjangoのテンプレートタグでURLを生成
+      // サーバーに保存
+      fetch('/cooking_records/create_toggle_favorite/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-CSRFToken': '{{ csrf_token }}',
+          'X-CSRFToken': '{{ csrf_token }}',  // Djangoなら必須
         },
         body: JSON.stringify({
-          record_id: {{ record.id|default:"null" }},
-          is_favorite: isFavorite ? 1 : 0
+          record_id: {{ record.id|default:"null" }},   // レコードIDを送る
+          is_favorite: isFavorite ? 1 : 0               // 1または0で送る
         })
       })
       .then(response => response.json())
       .then(data => {
-        favoriteBtn.textContent = data.is_favorite ? '❤️' : '🤍';
+        // ハートの見た目を切り替え
+        favoriteBtn.textContent = isFavorite ? '❤️' : '🤍';
+        favoriteBtn.dataset.isFavorite = data.is_favorite ? 'true' : 'false';
       })
       .catch(error => {
         console.error('エラー:', error);
       });
     });
   });
+
+      {% comment %} // hiddenフィールドの値を更新
+      const isFavoriteInput = document.getElementById('isFavorite');
+      if (isFavoriteInput) {
+        isFavoriteInput.value = isFavorite ? '1' : '0';
+      }
+    });
+  }); {% endcomment %}
 
   document.getElementById('addRecipes').addEventListener('click', function() {
     // チェックされたレシピを取得
@@ -443,6 +478,7 @@
     });
 
     // モーダルを閉じる
+    document.activeElement.blur();  //フォーカスを外す
     const recipeModal = bootstrap.Modal.getInstance(document.getElementById('recipeModal'));
     recipeModal.hide();
   });
