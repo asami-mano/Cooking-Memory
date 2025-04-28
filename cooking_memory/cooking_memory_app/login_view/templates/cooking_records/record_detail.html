@@ -14,8 +14,11 @@
   </div>
 </div>
 
+<a href="{% url 'cooking_records:cooking_record_update' pk=record.pk %}" class="btn btn-primary">
+  編集
+</a>
 <p>日付：{{ record.date }}</p>
-<p>カテゴリ：{{ record.category.name }}</p>
+<p>カテゴリ：{{ record.cooking_category.name }}</p>
 <p>調理の手軽さ：
   {% if record.cooking_easiness == 0 %}簡単
   {% elif record.cooking_easiness == 1 %}普通

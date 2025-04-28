@@ -102,6 +102,24 @@
 <form method="post" enctype="multipart/form-data">
   {% csrf_token %}
 
+
+  {% if form.errors %}
+  <div class="alert alert-danger">
+      <strong>エラーがあります</strong>
+      <ul>
+      {% for field in form %}
+          {% for error in field.errors %}
+          <li>{{ field.label }}: {{ error }}</li>
+          {% endfor %}
+      {% endfor %}
+      {% for error in form.non_field_errors %}
+          <li>{{ error }}</li>
+      {% endfor %}
+      </ul>
+  </div>
+  {% endif %}
+
+
   <div id="photoPreviewArea" style="margin-top: 10px;">
     <img id="photoPreview" src="" alt="プレビュー" style="max-width: 100%; display: none;">
   </div>
@@ -133,14 +151,9 @@
   </div>
   <div class="form-group">
     <label>お気に入り</label>
-    {% comment %} <button type="button" class="favorite-btn" data-url="{% url 'cooking_records:toggle_favorite' pk=record.id %}">
-      {% if record.is_favorite %}
-        ❤️
-      {% else %}
-        🤍
-      {% endif %}
-    </button> {% endcomment %}
-    <button class="favorite-btn">🤍</button>
+    <button class="favorite-btn" id="favorite-btn">
+      🤍
+    </button>
   </div>
   <div class="form-group">
     {{ form.memo.label }}<br> 
@@ -364,30 +377,31 @@
 
   // お気に入りボタン切り替え
   document.addEventListener('DOMContentLoaded', function() {
-    const favoriteBtns = document.querySelectorAll('.favorite-btn');
-  
-    favoriteBtns.forEach(function(btn) {
-      btn.addEventListener('click', function() {
-        const url = btn.dataset.url;
-  
-        fetch(url, {
-          method: 'POST',
-          headers: {
-            'X-CSRFToken': '{{ csrf_token }}',  // Django用にCSRFトークンを送る
-            'Content-Type': 'application/json',
-          },
+    const favoriteBtn = document.querySelector('.favorite-btn');
+    let isFavorite = false;  // 初期状態（新規作成の場合）
+
+    favoriteBtn.addEventListener('click', function(event) {
+      event.preventDefault();  // ボタンのデフォルトの動作（フォーム送信等）を防ぐ
+      isFavorite = !isFavorite;  // 状態を切り替え
+
+      // 新規作成の場合、API呼び出し
+      fetch(`/cooking_records/create_toggle_favorite/`, {  // DjangoのテンプレートタグでURLを生成
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': '{{ csrf_token }}',
+        },
+        body: JSON.stringify({
+          record_id: {{ record.id|default:"null" }},
+          is_favorite: isFavorite ? 1 : 0
         })
-        .then(response => response.json())
-        .then(data => {
-          if (data.is_favorite) {
-            btn.innerHTML = '❤️';
-          } else {
-            btn.innerHTML = '🤍';
-          }
-        })
-        .catch(error => {
-          console.error('エラー:', error);
-        });
+      })
+      .then(response => response.json())
+      .then(data => {
+        favoriteBtn.textContent = data.is_favorite ? '❤️' : '🤍';
+      })
+      .catch(error => {
+        console.error('エラー:', error);
       });
     });
   });

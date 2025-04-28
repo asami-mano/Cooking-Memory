@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+  <form method="post" action="{% url 'cooking_records:cooking_record_update' form.instance.pk %}" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+
+
+    {% if form.errors %}
+    <div class="alert alert-danger">
+        <strong>エラーがあります</strong>
+        <ul>
+        {% for field in form %}
+            {% for error in field.errors %}
+            <li>{{ field.label }}: {{ error }}</li>
+            {% endfor %}
+        {% endfor %}
+        {% for error in form.non_field_errors %}
+            <li>{{ error }}</li>
+        {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+
+    <!-- 写真プレビュー -->
+    {% if form.instance.image_url %}
+      <div class="mb-3">
+        <img src="{{ form.instance.image_url.url }}" alt="献立写真" style="max-width: 100%; height: auto;">
+      </div>
+    {% endif %}
+
+    <!-- 写真アップロード -->
+    <div class="mb-3">
+      {{ form.image_url.label_tag }}
+      {{ form.image_url }}
+      {{ form.image_url.errors }}
+    </div>
+
+    <!-- 日付 -->
+    <div class="mb-3">
+      {{ form.date.label_tag }}
+      {{ form.date }}
+      {{ form.date.errors }}
+    </div>
+
+    <!-- カテゴリ -->
+    <div class="mb-3">
+      {{ form.cooking_category.label_tag }}
+      {{ form.cooking_category }}
+      {{ form.cooking_category.errors }}
+    </div>
+
+    <!-- 調理の手軽さ -->
+    <div class="mb-3">
+      {{ form.cooking_easiness.label_tag }}
+      {{ form.cooking_easiness }}
+      {{ form.cooking_easiness.errors }}
+    </div>
+
+    <!-- お気に入り（♡ボタン） -->
+    <div class="mb-3">
+      <label>お気に入り</label><br>
+      <button type="button" id="favorite-btn" data-url="{% url 'cooking_records:toggle_favorite' pk=form.instance.pk %}" class="btn btn-link" style="font-size: 2rem;">
+        {% if form.instance.is_favorite %}
+            ❤️
+        {% else %}
+            🤍
+        {% endif %}
+      </button>
+    </div>
+
+    <!-- メモ -->
+    <div class="mb-3">
+      {{ form.memo.label_tag }}
+      {{ form.memo }}
+      {{ form.memo.errors }}
+    </div>
+
+    <!-- 参考レシピ（もし必要なら追加） -->
+    {# 必要に応じてここにレシピリストとか #}
+
+    <button type="submit" class="btn btn-primary">更新</button>
+  </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const favoriteBtn = document.getElementById('favorite-btn');
+      if (favoriteBtn) {
+        favoriteBtn.addEventListener('click', function() {
+          const url = favoriteBtn.dataset.url;
+    
+          fetch(url, {
+            method: 'POST',
+            headers: {
+              'X-CSRFToken': '{{ csrf_token }}',
+              'Content-Type': 'application/json',
+            },
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.is_favorite) {
+              favoriteBtn.innerHTML = '❤️';
+            } else {
+              favoriteBtn.innerHTML = '🤍';
+            }
+          })
+          .catch(error => {
+            console.error('エラー:', error);
+          });
+        });
+      }
+    });
+</script>
+    
+{% endblock %}
