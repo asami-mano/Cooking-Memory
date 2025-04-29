@@ -82,41 +82,130 @@
       {{ form.memo.errors }}
     </div>
 
-    <!-- 参考レシピ（もし必要なら追加） -->
-    {# 必要に応じてここにレシピリストとか #}
+    <!-- 参考レシピ -->
+    <h3>参考レシピ</h3>
+    <ul id="recipeList">
+      {% for cr_recipe in record.cooking_record_recipes.all %}
+        <li data-recipe-id="{{ cr_recipe.recipe.id }}">
+          {{ cr_recipe.recipe.name }}
+          <button type="button" class="btn btn-danger btn-sm remove-recipe-btn">削除</button>
+        </li>
+      {% endfor %}
+    </ul>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#recipeModal">
+      ＋レシピリスト
+    </button>
+    <input type="hidden" name="recipes" id="recipesInput">
 
     <button type="submit" class="btn btn-primary">更新</button>
   </form>
 </div>
 
+<!-- モーダル -->
+<div class="modal fade" id="recipeModal" tabindex="-1">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">レシピを選択</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        {% if recipes %}
+          {% for recipe in recipes %}
+            <div>
+              <input type="checkbox" name="recipes" value="{{ recipe.id }}" data-name="{{ recipe.name }}"> {{ recipe.name }}
+            </div>
+          {% endfor %}
+        {% else %}
+          <p>レシピがありません</p>
+        {% endif %}
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="addRecipes">レシピを追加</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const favoriteBtn = document.getElementById('favorite-btn');
-      if (favoriteBtn) {
-        favoriteBtn.addEventListener('click', function() {
-          const url = favoriteBtn.dataset.url;
-    
-          fetch(url, {
-            method: 'POST',
-            headers: {
-              'X-CSRFToken': '{{ csrf_token }}',
-              'Content-Type': 'application/json',
-            },
-          })
-          .then(response => response.json())
-          .then(data => {
-            if (data.is_favorite) {
-              favoriteBtn.innerHTML = '❤️';
-            } else {
-              favoriteBtn.innerHTML = '🤍';
-            }
-          })
-          .catch(error => {
-            console.error('エラー:', error);
-          });
+  document.addEventListener('DOMContentLoaded', function() {
+    const favoriteBtn = document.getElementById('favorite-btn');
+    if (favoriteBtn) {
+      favoriteBtn.addEventListener('click', function() {
+        const url = favoriteBtn.dataset.url;
+  
+        fetch(url, {
+          method: 'POST',
+          headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+            'Content-Type': 'application/json',
+          },
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.is_favorite) {
+            favoriteBtn.innerHTML = '❤️';
+          } else {
+            favoriteBtn.innerHTML = '🤍';
+          }
+        })
+        .catch(error => {
+          console.error('エラー:', error);
         });
+      });
+    }
+  });
+
+  document.addEventListener('DOMContentLoaded', function() {
+    // 削除ボタン
+    document.getElementById('recipeList').addEventListener('click', function(event) {
+      if (event.target.classList.contains('remove-recipe-btn')) {
+        const li = event.target.closest('li');
+        li.remove();
       }
     });
-</script>
+  
+    // レシピをモーダルから追加
+    document.getElementById('addRecipes').addEventListener('click', function() {
+      const checkedRecipes = document.querySelectorAll('#recipeModal input[type="checkbox"]:checked');
+      const recipeList = document.getElementById('recipeList');
+  
+      checkedRecipes.forEach(function(checkbox) {
+        const recipeId = checkbox.value;
+        const recipeName = checkbox.dataset.name;
+  
+        // すでに追加済みのレシピは無視
+        if (!document.querySelector(`#recipeList li[data-recipe-id="${recipeId}"]`)) {
+          const li = document.createElement('li');
+          li.dataset.recipeId = recipeId;
+          li.innerHTML = `
+            <a >${recipeName}</a>
+            <button type="button" class="btn btn-danger btn-sm remove-recipe-btn">削除</button>
+          `;
+          recipeList.appendChild(li);
+        }
+      });
+  
+      // モーダルを閉じる
+      const modal = bootstrap.Modal.getInstance(document.getElementById('recipeModal'));
+      modal.hide();
+    });
+  });
+  
+  function updateRecipesInput() {
+    const recipeIds = Array.from(document.querySelectorAll('#recipeList li'))
+      .map(li => li.dataset.recipeId);
+  
+    document.getElementById('recipesInput').value = recipeIds.join(',');
+  }
+  
+  document.querySelector('form').addEventListener('submit', function() {
+    updateRecipesInput();
+  });
+  
+  </script>
     
 {% endblock %}

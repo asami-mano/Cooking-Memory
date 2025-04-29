@@ -1,11 +1,22 @@
 from django import forms
-from .models import CookingRecord
+from .models import CookingRecord, Recipe
 
 class CookingRecordForm(forms.ModelForm):
+    recipes = forms.ModelMultipleChoiceField(
+        queryset=Recipe.objects.none(),
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+    
     class Meta:
         model = CookingRecord
-        fields = ['date', 'cooking_category', 'image_url', 'cooking_easiness', 'memo',]
+        fields = ['date', 'cooking_category', 'image_url', 'cooking_easiness', 'memo', 'recipes']
         widgets = {
             'date': forms.DateInput(attrs={'type': 'date'}),
             'memo': forms.Textarea(attrs={'rows': 3}),
         }
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+        if user:
+            self.fields['recipes'].queryset = Recipe.objects.filter(user=user)

@@ -29,8 +29,8 @@
 
 <div>
   <h3>参考レシピ</h3>
-  {% for recipe in record.recipe_list.all %}
-    <a href="{{ recipe.recipe_url }}" target="_blank">{{ recipe.name }}</a><br>
+  {% for cr_recipe in record.cooking_record_recipes.all %}
+    <a href="{{ cr_recipe.recipe.recipe_url }}" target="_blank">{{ cr_recipe.recipe.name }}</a><br>
   {% endfor %}
 </div>
 <button id="deleteBtn" style="background-color: red; color: white; padding: 10px 20px; border: none; border-radius: 5px;">削除</button>

@@ -152,9 +152,9 @@
   </div>
   <div class="form-group">
     <label>お気に入り</label>
-    <button class="favorite-btn" id="favorite-btn" data-is-favorite="false">
-      🤍
-    </button>
+    <button type="button" id="favoriteBtn" data-is-favorite="0">🤍</button>
+  <!-- 隠しフィールドでフォームに入れる -->
+  <input type="hidden" name="is_favorite" id="isFavoriteInput" value="0">
   </div>
   <div class="form-group">
     {{ form.memo.label }}<br> 
@@ -398,49 +398,25 @@
 
   // お気に入りボタン切り替え
   document.addEventListener('DOMContentLoaded', function() {
-    const favoriteBtn = document.querySelector('.favorite-btn');
-
-    favoriteBtn.addEventListener('click', function(event) {
-      event.preventDefault();  // ボタンのデフォルトの動作（フォーム送信等）を防ぐ
-      
-      // ボタンに持たせたデータ属性から現在の状態を取得
-      let isFavorite = favoriteBtn.dataset.isFavorite === 'true';
-
-      // 状態をトグル（反転）させる
-      isFavorite = !isFavorite;  // 状態を切り替え
-
-      // サーバーに保存
-      fetch('/cooking_records/create_toggle_favorite/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRFToken': '{{ csrf_token }}',  // Djangoなら必須
-        },
-        body: JSON.stringify({
-          record_id: {{ record.id|default:"null" }},   // レコードIDを送る
-          is_favorite: isFavorite ? 1 : 0               // 1または0で送る
-        })
-      })
-      .then(response => response.json())
-      .then(data => {
-        // ハートの見た目を切り替え
-        favoriteBtn.textContent = isFavorite ? '❤️' : '🤍';
-        favoriteBtn.dataset.isFavorite = data.is_favorite ? 'true' : 'false';
-      })
-      .catch(error => {
-        console.error('エラー:', error);
-      });
+    const favoriteBtn = document.getElementById('favoriteBtn');
+    const isFavoriteInput = document.getElementById('isFavoriteInput');
+  
+    favoriteBtn.addEventListener('click', function() {
+      // いまの状態を取得
+      let isFavorite = favoriteBtn.dataset.isFavorite === '1';
+  
+      // トグル（反転）
+      isFavorite = !isFavorite;
+  
+      // ボタンの見た目切り替え
+      favoriteBtn.textContent = isFavorite ? '❤️' : '🤍';
+  
+      // データ属性と隠しinputも更新
+      favoriteBtn.dataset.isFavorite = isFavorite ? '1' : '0';
+      isFavoriteInput.value = isFavorite ? '1' : '0';
     });
   });
-
-      {% comment %} // hiddenフィールドの値を更新
-      const isFavoriteInput = document.getElementById('isFavorite');
-      if (isFavoriteInput) {
-        isFavoriteInput.value = isFavorite ? '1' : '0';
-      }
-    });
-  }); {% endcomment %}
-
+  
   document.getElementById('addRecipes').addEventListener('click', function() {
     // チェックされたレシピを取得
     const checkedBoxes = document.querySelectorAll('input[name="recipes"]:checked');

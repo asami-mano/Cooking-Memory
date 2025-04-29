@@ -36,6 +36,11 @@ class CookingRecordCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         print(self.request.POST)
         form.instance.user = self.request.user  # ユーザーを紐づける
+        
+        # hidden inputから is_favorite も取得してセット
+        is_favorite = self.request.POST.get('is_favorite', '0')
+        form.instance.is_favorite = int(is_favorite)
+        
         response = super().form_valid(form)
 
         # hidden input からレシピIDを取得
@@ -97,14 +102,30 @@ class CookingRecordUpdateView(LoginRequiredMixin, UpdateView):
     template_name = 'cooking_records/record_update_form.html'
     success_url = reverse_lazy('cooking_records:my_list')
 
-    def get_queryset(self):
-        # 自分のレコードしか編集できないように
-        return CookingRecord.objects.filter(user=self.request.user)
-
+    def get_form_kwargs(self):
+            kwargs = super().get_form_kwargs()
+            kwargs['user'] = self.request.user
+            return kwargs
+        
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['recipes'] = Recipe.objects.filter(user=self.request.user)
         return context
+    
+    def form_valid(self, form):
+        response = super().form_valid(form)
+
+        # いったん既存の関連を全部削除
+        self.object.cooking_record_recipes.all().delete()
+
+        # 新しく選んだレシピを登録
+        recipe_ids = form.cleaned_data['recipes']
+        for recipe in recipe_ids:
+            CookingRecordRecipe.objects.create(
+                cooking_record=self.object,
+                recipe=recipe
+            )
+        return response
     
 class ToggleFavoriteView(LoginRequiredMixin, View):
     def post(self, request, pk, *args, **kwargs):
