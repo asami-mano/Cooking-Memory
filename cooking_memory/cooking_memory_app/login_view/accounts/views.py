@@ -25,11 +25,17 @@ class RegistUserView(CreateView):
     success_url = reverse_lazy('cooking_records:my_list')
 
     def form_valid(self, form):
-        user = form.save()
+        user = form.save(commit=False)
         user.is_active = True
+        user.save()
 
-        # ユーザーをログイン状態にする
-        login(self.request, user)
+        # ここでログイン処理
+        user = authenticate(self.request, email=user.email, password=form.cleaned_data['password'])
+        if user is not None:
+            login(self.request, user)
+        else:
+            print("認証失敗")
+            
         return super().form_valid(form)
     
 class UserLoginView2(FormView):
@@ -184,9 +190,13 @@ class InviteRegistUserView(CreateView):
         self.invitation.used = 1
         self.invitation.save()
 
-        # ユーザーをログイン状態にする
-        login(self.request, user)
-
+        # ここでログイン処理
+        user = authenticate(self.request, email=user.email, password=form.cleaned_data['password'])
+        if user is not None:
+            login(self.request, user)
+        else:
+            print("認証失敗")
+            
         return super().form_valid(form)
 
 class ShareUsersView(LoginRequiredMixin, View):
