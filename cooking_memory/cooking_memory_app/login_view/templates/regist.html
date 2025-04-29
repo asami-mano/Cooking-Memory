@@ -1,10 +1,17 @@
 {% block content %}
 <style>
+    form h1 {
+        color: #F58220;
+        font-size: x-large;
+        font-weight: bold;
+        font-family: fantasy;
+    }
+
     form {
         display: flex;
         flex-direction: column;
         align-items: center; /* 子要素（入力欄・ボタン）を中央に */
-        margin-top: 20%;
+        margin-top: 10%;
     }
     
     form div {
@@ -38,6 +45,8 @@
 
 <form method="POST">
     {% csrf_token %}
+    <h1>くくめも</h1>
+
     <div>
         {{ form.username.label_tag }}<br>
         {{ form.username }}

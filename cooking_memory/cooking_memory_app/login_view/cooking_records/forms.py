@@ -2,15 +2,15 @@ from django import forms
 from .models import CookingRecord, Recipe
 
 class CookingRecordForm(forms.ModelForm):
-    recipes = forms.ModelMultipleChoiceField(
-        queryset=Recipe.objects.none(),
-        widget=forms.CheckboxSelectMultiple,
-        required=False
-    )
+    # recipes = forms.ModelMultipleChoiceField(
+    #     queryset=Recipe.objects.none(),
+    #     widget=forms.CheckboxSelectMultiple,
+    #     required=False
+    # )
     
     class Meta:
         model = CookingRecord
-        fields = ['date', 'cooking_category', 'image_url', 'cooking_easiness', 'memo', 'recipes']
+        fields = ['date', 'cooking_category', 'image_url', 'cooking_easiness', 'memo']
         widgets = {
             'date': forms.DateInput(attrs={'type': 'date'}),
             'memo': forms.Textarea(attrs={'rows': 3}),
@@ -18,5 +18,5 @@ class CookingRecordForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
-        if user:
-            self.fields['recipes'].queryset = Recipe.objects.filter(user=user)
+        # if user:
+        #     self.fields['recipes'].queryset = Recipe.objects.filter(user=user)

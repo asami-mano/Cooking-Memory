@@ -85,7 +85,7 @@
     <!-- 参考レシピ -->
     <h3>参考レシピ</h3>
     <ul id="recipeList">
-      {% for cr_recipe in record.cooking_record_recipes.all %}
+      {% for cr_recipe in form.instance.cooking_record_recipes.all %}
         <li data-recipe-id="{{ cr_recipe.recipe.id }}">
           {{ cr_recipe.recipe.name }}
           <button type="button" class="btn btn-danger btn-sm remove-recipe-btn">削除</button>
@@ -95,8 +95,10 @@
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#recipeModal">
       ＋レシピリスト
     </button>
-    <input type="hidden" name="recipes" id="recipesInput">
+    <input type="hidden" name="recipes_hidden" id="recipesInput">
 
+    <!-- hiddenフィールド用（最初は空） -->
+    <div id="selectedRecipesHiddenArea" style="display: none;"></div>
     <button type="submit" class="btn btn-primary">更新</button>
   </form>
 </div>
@@ -199,11 +201,31 @@
     const recipeIds = Array.from(document.querySelectorAll('#recipeList li'))
       .map(li => li.dataset.recipeId);
   
-    document.getElementById('recipesInput').value = recipeIds.join(',');
+    // 既存のhidden inputは削除
+    const hiddenArea = document.getElementById('selectedRecipesHiddenArea');
+    hiddenArea.innerHTML = '';
+
+    // 各IDに対して<input type="hidden" name="recipes" value="...">を追加
+    recipeIds.forEach(id => {
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = 'recipes';
+      input.value = id;
+      hiddenArea.appendChild(input);
+    });
+
+    console.log('送信するレシピID:', recipeIds);
   }
-  
-  document.querySelector('form').addEventListener('submit', function() {
-    updateRecipesInput();
+
+  // フォーム送信時にhidden inputを構成
+  document.querySelector('form').addEventListener('submit', function(event) {
+    event.preventDefault();  // デフォルトの送信を止める
+    updateRecipesInput();    // hidden input を作る
+
+    // 少し遅らせて送信（確実に hidden input が反映された後）
+    setTimeout(() => {
+      event.target.submit();
+    }, 50);
   });
   
   </script>
