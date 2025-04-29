@@ -12,7 +12,7 @@ from django.contrib.auth.views import LoginView,LogoutView
 from django.contrib import messages
 from django.utils.crypto import get_random_string
 from .models import Invitation,ShareGroup,User
-from django.http import JsonResponse
+from django.http import JsonResponse,Http404
 from django.views import View
 from django.views.generic.edit import FormView
 
@@ -22,10 +22,12 @@ class HomeView(TemplateView):
 class RegistUserView(CreateView):
     template_name = 'regist.html'
     form_class = RegistForm
-    success_url = reverse_lazy('accounts:my_list')
+    success_url = reverse_lazy('cooking_records:my_list')
 
     def form_valid(self, form):
         user = form.save()
+        user.is_active = True
+
         # ユーザーをログイン状態にする
         login(self.request, user)
         return super().form_valid(form)
@@ -33,7 +35,7 @@ class RegistUserView(CreateView):
 class UserLoginView2(FormView):
     template_name='user_login_2.html'
     form_class=UserLoginForm2
-    success_url = reverse_lazy('accounts:my_list')
+    success_url = reverse_lazy('cooking_records:my_list')
 
     def form_valid(self, form):
         email = form.cleaned_data['email']
@@ -57,7 +59,7 @@ class UserLogoutView(View):
 
     def post(self, request, *args, **kwargs):
         logout(request)
-        return redirect('accounts:my_list')
+        return redirect('cooking_records:my_list')
     
 class UserLoginView(LoginView):
     template_name = 'user_login.html'
@@ -65,7 +67,7 @@ class UserLoginView(LoginView):
     form_class = UserLoginForm
 
 class UserLogoutView2(LogoutView):
-    next_page = reverse_lazy('accounts:mypage')
+    next_page = reverse_lazy('cooking_records:my_list')
     http_method_names = ['get', 'post']
     template_name = 'user_logout.html'   
     
@@ -130,13 +132,16 @@ class GenerateInviteView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         token = get_random_string(20)
+        
+        # フルURLはcontextに渡すだけ
         invite_url = self.request.build_absolute_uri(
             reverse('accounts:share_regist', args=[token])
         )
         
+        # invitation_urlにはtokenだけ保存
         Invitation.objects.create(
             user=self.request.user,
-            invitation_url=invite_url,
+            invitation_url=token,
             used=0  # 0: 未使用
         )
             
@@ -148,12 +153,14 @@ User = get_user_model()
 class InviteRegistUserView(CreateView):
     template_name = 'regist.html'
     form_class = RegistForm
-    success_url = reverse_lazy('accounts:my_list')
+    success_url = reverse_lazy('cooking_records:my_list')
 
     def dispatch(self, request, *args, **kwargs):
         self.invitation_url = kwargs.get('invitation_url')  # 招待URLの取得
-        print("受け取ったinvitation_url:", self.invitation_url) 
-        self.invitation = get_object_or_404(Invitation, invitation_url=self.invitation_url, used=0)
+        try:
+            self.invitation = Invitation.objects.get(invitation_url=self.invitation_url, used=0)
+        except Invitation.DoesNotExist:
+            raise Http404("この招待URLは無効か、すでに使用されています。")
         return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
@@ -170,6 +177,7 @@ class InviteRegistUserView(CreateView):
 
         # 招待されたユーザーにもグループを割り当て
         user.share_group = group
+        user.is_active = True
         user.save()
 
         # 招待トークンを使用済みにする
