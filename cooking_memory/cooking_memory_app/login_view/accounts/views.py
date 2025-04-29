@@ -22,45 +22,18 @@ class HomeView(TemplateView):
 class RegistUserView(CreateView):
     template_name = 'regist.html'
     form_class = RegistForm
-    success_url = reverse_lazy('accounts:home')
-
-    def dispatch(self, request, *args, **kwargs):
-        self.invitation_url = kwargs.get('invitation_url')  # 招待URLの取得
-        print("受け取ったinvitation_url:", self.invitation_url) 
-        self.invitation = get_object_or_404(Invitation, invitation_url=self.invitation_url, used=0)
-        return super().dispatch(request, *args, **kwargs)
+    success_url = reverse_lazy('accounts:my_list')
 
     def form_valid(self, form):
-        user = form.save(commit=False)
-
-        # 招待者を取得
-        inviter = self.invitation.user
-
-        # 招待者がshare_groupを持っていなければ作成
-        if not inviter.share_group:
-            group = ShareGroup.objects.create()
-            inviter.share_group = group
-            inviter.save()
-        else:
-            group = inviter.share_group
-
-        # 招待されたユーザーにもグループを割り当て
-        user.share_group = group
-        user.save()
-
-        # 招待トークンを使用済みにする
-        self.invitation.used = 1
-        self.invitation.save()
-
+        user = form.save()
         # ユーザーをログイン状態にする
         login(self.request, user)
-
         return super().form_valid(form)
     
 class UserLoginView2(FormView):
     template_name='user_login_2.html'
     form_class=UserLoginForm2
-    success_url = reverse_lazy('accounts:user')
+    success_url = reverse_lazy('accounts:my_list')
 
     def form_valid(self, form):
         email = form.cleaned_data['email']
@@ -171,6 +144,42 @@ class GenerateInviteView(LoginRequiredMixin, TemplateView):
         return context
     
 User = get_user_model()
+
+class InviteRegistUserView(CreateView):
+    template_name = 'regist.html'
+    form_class = RegistForm
+    success_url = reverse_lazy('accounts:my_list')
+
+    def dispatch(self, request, *args, **kwargs):
+        self.invitation_url = kwargs.get('invitation_url')  # 招待URLの取得
+        print("受け取ったinvitation_url:", self.invitation_url) 
+        self.invitation = get_object_or_404(Invitation, invitation_url=self.invitation_url, used=0)
+        return super().dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        user = form.save(commit=False)
+        # 招待者を取得
+        inviter = self.invitation.user
+        # 招待者がshare_groupを持っていなければ作成
+        if not inviter.share_group:
+            group = ShareGroup.objects.create()
+            inviter.share_group = group
+            inviter.save()
+        else:
+            group = inviter.share_group
+
+        # 招待されたユーザーにもグループを割り当て
+        user.share_group = group
+        user.save()
+
+        # 招待トークンを使用済みにする
+        self.invitation.used = 1
+        self.invitation.save()
+
+        # ユーザーをログイン状態にする
+        login(self.request, user)
+
+        return super().form_valid(form)
 
 class ShareUsersView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
