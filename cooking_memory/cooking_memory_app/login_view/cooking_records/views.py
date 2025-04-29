@@ -101,12 +101,12 @@ class CookingRecordUpdateView(LoginRequiredMixin, UpdateView):
     form_class = CookingRecordForm
     template_name = 'cooking_records/record_update_form.html'
     success_url = reverse_lazy('cooking_records:my_list')
-    context_object_name = 'record'# テンプレートで使う変数名（record）
+    # context_object_name = 'record'# テンプレートで使う変数名（record）
 
-    def get_form_kwargs(self):
-            kwargs = super().get_form_kwargs()
-            kwargs['user'] = self.request.user
-            return kwargs
+    # def get_form_kwargs(self):
+    #         kwargs = super().get_form_kwargs()
+    #         kwargs['user'] = self.request.user
+    #         return kwargs
         
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
