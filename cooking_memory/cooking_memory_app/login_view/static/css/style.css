@@ -1,12 +1,32 @@
-@charset "ytf-8"
+@charset "UTF-8"
 
-;form {
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* 子要素（入力欄・ボタン）を中央に */
-    margin-top: 5%;
+/* body {
+  font-family: "Helvetica", "Arial", sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+  margin: 0;
+  padding: 0;
+} */
+
+/* 全体を中央に寄せる */
+.page-wrapper {
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+  font-size: 40px; 全体的に文字大きく
 }
 
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* 子要素（入力欄・ボタン）を中央に */
+  margin-top: 5%;
+}
+
+h1 {
+  font-size: 60px;
+  text-align: center;
+}
 form div {
     margin-bottom: 50px;
     width: 100%;
@@ -70,7 +90,8 @@ label {
 }
 
 button[type="submit"] {
-  font-size: 60px;
+  font-size: 40px;
+  align-items: center;
   padding: 10px 30px;
 }
 
@@ -82,6 +103,33 @@ button[type="submit"] {
 .btn-outline-secondary{
   font-size: 50px;
   padding: 12px 24px;
+}
+
+/* モーダル全体の文字サイズを大きく */
+.modal-content {
+  font-size: 30px;
+  border-radius: 12px;
+}
+
+/* モーダルタイトル */
+.modal-title {
+  font-size: 40px;
+  font-weight: bold;
+}
+
+/* モーダル入力欄 */
+.modal-body input.form-control {
+  font-size: 40px;
+  padding: 5px;
+  height: auto;
+  border-radius: 8px;
+}
+
+/* モーダル内のボタン */
+.modal-footer .btn {
+  font-size: 30px;
+  padding: 10px 24px;
+  border-radius: 8px;
 }
 
 #open-category-modal {
