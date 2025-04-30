@@ -4,7 +4,7 @@ from .views import(
     UserLogoutView,UserView,UserLoginView2,
     UserLogoutView2,ChangeEmailView,MyPasswordChangeView,
     MyPageView,GenerateInviteView,InviteRegistUserView,
-    ShareUsersView,
+    ShareUsersView,UploadProfileImageView, ChangeUsernameView,
     
 )
 from django.conf import settings
@@ -25,6 +25,8 @@ urlpatterns = [
     path('generate_invite/',GenerateInviteView.as_view(),name='generate_invite'),
     path('share_regist/<str:invitation_url>/', InviteRegistUserView.as_view(), name='share_regist'),
     path('share_users/', ShareUsersView.as_view(), name='share_users'),
+    path('upload_profile_image/', UploadProfileImageView.as_view(), name='upload_profile_image'),
+    path('change_username/', ChangeUsernameView.as_view(), name='change_username'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

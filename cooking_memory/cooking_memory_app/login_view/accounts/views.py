@@ -16,6 +16,8 @@ from django.http import JsonResponse,Http404
 from django.views import View
 from django.views.generic.edit import FormView
 
+User = get_user_model()
+
 class HomeView(TemplateView):
     template_name='home.html'
     
@@ -154,8 +156,6 @@ class GenerateInviteView(LoginRequiredMixin, TemplateView):
         context['invite_url'] = invite_url
         return context
     
-User = get_user_model()
-
 class InviteRegistUserView(CreateView):
     template_name = 'regist.html'
     form_class = RegistForm
@@ -226,3 +226,20 @@ class ShareUsersView(LoginRequiredMixin, View):
             }
 
         return JsonResponse(data)
+    
+class UploadProfileImageView(LoginRequiredMixin, View):
+    def post(self, request):
+        user = request.user
+        
+        if 'image' in request.FILES:
+            user.image_url = request.FILES['image']
+            user.save()
+        return redirect('accounts:mypage')
+    
+class ChangeUsernameView(LoginRequiredMixin, View):
+    def post(self, request):
+        new_username = request.POST.get('username')
+        if new_username:
+            request.user.username = new_username
+            request.user.save()
+        return redirect('accounts:mypage')

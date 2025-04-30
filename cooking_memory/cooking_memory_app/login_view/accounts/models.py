@@ -30,7 +30,7 @@ class User(AbstractBaseUser,PermissionsMixin):
     is_active=models.BooleanField(default=True)
     is_staff=models.BooleanField(default=False)
     share_group = models.ForeignKey(ShareGroup, on_delete=models.SET_NULL, null=True, blank=True)
-    image_url = models.URLField(blank=True, null=True)
+    image_url = models.ImageField(max_length=300,upload_to='profile_images/', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
@@ -40,7 +40,7 @@ class User(AbstractBaseUser,PermissionsMixin):
     objects=UserManager()
     
     def get_absolute_url(self):
-        return reverse_lazy("accounts:home")#あとでhomeをmypageに変更する
+        return reverse_lazy("accounts:mypage")
     
 class Invitation(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
