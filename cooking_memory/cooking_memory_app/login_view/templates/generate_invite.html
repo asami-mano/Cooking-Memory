@@ -9,15 +9,17 @@
         margin-top: 100px;
     }
     
-    form div {
-        margin-bottom: 80px;
-        width: 100%;
-        max-width: 700px; /* 入力欄の幅を制限 */
-    }
     label {
         display: block;
         font-size: 60px;
     }
+    .invite-url {
+        margin-bottom: 80px;
+        width: 100%;
+        {% comment %} max-width: 700px; /* 入力欄の幅を制限 */ {% endcomment %}
+        font-size: 40px;
+    }
+
     input[type="url"]{
       font-size: 60px;
       height: 100px;
@@ -29,12 +31,13 @@
 </style>  
 
 {% if invite_url %}
-    <h1>招待用URL：</h1>
-    <input id="invite-url" type="text" value="{{ invite_url }}" readonly style="width:80%;">
-    <button onclick="copyToClipboard()">コピー</button>
-    <p>※このリンクを招待したい人に送ってください。</p>
-    <p>※このリンクは一度利用されると無効になります。</p>
-
+    <label>招待用URL：</label>
+    <div class="invite-url">
+        <input id="invite-url" type="text" value="{{ invite_url }}" readonly style="width:80%;">
+        <button onclick="copyToClipboard()">コピー</button>
+        <p>※このリンクを招待したい人に送ってください。</p>
+        <p>※このリンクは一度利用されると無効になります。</p>
+    </div>
 {% else %}
     <p>招待リンクの生成に失敗しました。</p>
 {% endif %}

@@ -43,7 +43,7 @@
       <label>URL:</label><br>
       <input type="text" name="recipe_url" id="recipe-url" required class="input-large">
     </div>
-    <button type="button" onclick="fetchTitle()" class="btn-large">レシピ名取得</button><br><br><br>
+    {% comment %} <button type="button" onclick="fetchTitle()" class="btn-large">レシピ名取得</button><br><br><br> {% endcomment %}
 
     <div class="form-group">
       <label>レシピ名:</label><br>
@@ -52,7 +52,7 @@
     <button type="submit" class="btn-submit">リストに追加</button>
   </form>
   
-  <script>
+  {% comment %} <script>
   function fetchTitle() {
     const url = document.getElementById('recipe-url').value;
   
@@ -71,6 +71,6 @@
     xhr.responseType = "document";
     xhr.send();
   }
-  </script>
+  </script> {% endcomment %}
   
 {% endblock %}

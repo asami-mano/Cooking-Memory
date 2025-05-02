@@ -11,7 +11,7 @@ class RecipeListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         query = self.request.GET.get('q', '')
-        queryset = Recipe.objects.filter(user=self.request.user)
+        queryset = Recipe.objects.filter(user=self.request.user).order_by('-created_at')
         if query:
             queryset = queryset.filter(name__icontains=query)
         return queryset

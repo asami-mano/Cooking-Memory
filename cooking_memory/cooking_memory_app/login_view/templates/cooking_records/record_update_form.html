@@ -118,7 +118,7 @@
       {% for cr_recipe in form.instance.cooking_record_recipes.all %}
         <li data-recipe-id="{{ cr_recipe.recipe.id }}">
           {{ cr_recipe.recipe.name }}
-          <button type="button" class="btn btn-danger btn-sm remove-recipe-btn">削除</button>
+          <button type="button" class="btn btn-danger btn-sm remove-recipe-btn" style="font-size: 30px;">削除</button>
         </li>
       {% endfor %}
     </ul>
