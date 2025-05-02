@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import(
-    RegistUserView,HomeView,UserLoginView,
+    PortfolioView,RegistUserView,
     UserLogoutView,UserView,UserLoginView2,
     UserLogoutView2,ChangeEmailView,MyPasswordChangeView,
     MyPageView,GenerateInviteView,InviteRegistUserView,
@@ -10,11 +10,12 @@ from .views import(
 from django.conf import settings
 from django.conf.urls.static import static
 
+# urlpatterns = path('portfolio/',PortfolioView.as_view(),name='portfolio')
+
 app_name='accounts'
 urlpatterns = [
-    # path('home/',HomeView.as_view(),name='home'),
+    path('portfolio/',PortfolioView.as_view(),name='portfolio'),
     path('regist/',RegistUserView.as_view(),name='regist'),
-    path('user_login/',UserLoginView.as_view(),name='user_login'),
     path('user_logout/',UserLogoutView.as_view(),name='user_logout'),
     path('user/', UserView.as_view(), name='user'),
     path('user_login2/',UserLoginView2.as_view(),name='user_login_2'),
