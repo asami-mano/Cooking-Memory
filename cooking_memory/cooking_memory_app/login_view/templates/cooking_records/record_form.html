@@ -1,102 +1,27 @@
 {% extends 'base.html' %}
 {% block content %}
 
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/sanitize.css' %}">
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+
 <style>
-  form {
-      display: flex;
-      flex-direction: column;
-      align-items: center; /* 子要素（入力欄・ボタン）を中央に */
-      margin-top: 5%;
-  }
-
-  form div {
-      margin-bottom: 50px;
-      width: 100%;
-      max-width: 800px; /* 入力欄の幅を制限 */
-  }
-  label {
-      display: block;
-      font-size: 60px;
-  }
-
-  .form-group {
-    font-size: 60px;
-    font-weight: bold;
-    margin-bottom: 50px;
-  }
-
-  .form-group label {
-    margin-bottom: 6px;
-    font-weight: bold;
-  }
-
-  .form-group textarea {
-    width: 80%;
-    padding: 8px;
-    border-radius: 8px;
-  }
-
-  .star-rating {
-    display: inline-flex;#横並びにする
-    gap: 4px;#星の間に4pxの隙間
-    direction: ltr;
-    font-size: 60px;
-  }
-  .star-rating input[type="radio"] {
-    display: none;
-  }
-  .star-rating label {
-    font-size: 100px;
-    color: #ccc;
-    cursor: pointer;
-  }
-  .star-rating input[type="radio"]:checked ~ label {
-    color:rgb(8, 6, 0);
-  }
-  .star-rating label:hover,
-  .star-rating label:hover ~ label {
-    color: #f5c518;
-  }
-
-  .easiness-labels {
-    font-size: 32px;
-    margin-top: 10px;
-    text-align: center;
-  }
-
-  .favorite-btn {
-    font-size: 100px;
-    background: none;
-    border: none;
-    cursor: pointer;
-  }
-
-  button[type="submit"] {
-    font-size: 60px;
-    padding: 10px 30px;
-}
-
   .easiness-labels {
     margin-top: 5px;
     font-size: 30px;
     text-align: left;
   }
 
-  .btn-outline-secondary{
-    font-size: 50px;
-    padding: 12px 24px;
+  #favoriteBtn {
+    font-size: 100px;
+    background: none;
+    border: none;
+    cursor: pointer;
   }
-
-  #open-category-modal {
-    font-size: 30px;
-    color: gray;
-    margin-left: 10px;
-    text-decoration: none;
-  }
-
-  #selected-recipes {
-    margin-top: 10px;
-  }
+  
+  .list-group {
+    font-size: 40px;
+  }  
 
 </style>
 
@@ -123,10 +48,10 @@
   <!-- ここに隠しfileInputを設置 -->
   <input type="file" id="fileInput" name="image_url" accept="image/*" style="display: none;">
 
-  <div id="photoPreviewArea" style="margin-top: 10px;">
+  <div id="photoPreviewArea" style="margin-top: 1px;">
     <img id="photoPreview" src="" alt="プレビュー" style="max-width: 100%; display: none;">
   </div>
-  <button type="button" id="openPhotoModal">📷</button>
+  <button type="button" id="openPhotoModal" style="font-size: 70px; margin-bottom: 20px;">📷</button>
 
   <div class="form-group">
     {{ form.date.label }} {{ form.date }}
@@ -140,12 +65,11 @@
     <div class="star-rating">
       <input type="radio" id="easiness-3" name="cooking_easiness" value="2">
       <label for="easiness-3">★</label>
-
       <input type="radio" id="easiness-2" name="cooking_easiness" value="1" checked>
       <label for="easiness-2">★</label>
-
       <input type="radio" id="easiness-1" name="cooking_easiness" value="0">
       <label for="easiness-1">★</label>
+
     </div>
     <div class="easiness-labels">
       <span>★簡単  ★★普通  ★★★手間がかかる</span>
@@ -154,8 +78,8 @@
   <div class="form-group">
     <label>お気に入り</label>
     <button type="button" id="favoriteBtn" data-is-favorite="0">🤍</button>
-  <!-- 隠しフィールドでフォームに入れる -->
-  <input type="hidden" name="is_favorite" id="isFavoriteInput" value="0">
+    <!-- 隠しフィールドでフォームに入れる -->
+    <input type="hidden" name="is_favorite" id="isFavoriteInput" value="0">
   </div>
   <div class="form-group">
     {{ form.memo.label }}<br> 
@@ -202,13 +126,13 @@
   </div>
 </div>
 
-<div id="category-modal" style="display:none; position:fixed; top:30%; left:30%; background:#fff; border:1px solid #ccc; padding:20px;">
-  <h3>新規カテゴリ</h3>
+<div id="category-modal" style="display:none; position:fixed; top:30%; left:30%; background:#fff; font-size:40px; border:1px solid #ccc; padding:20px;">
+  <h2>新規カテゴリ</h2>
   <form id="category-form">
     {% csrf_token %}
     <input type="text" id="new-category-name" placeholder="カテゴリ名" required><br>
     <button type="submit">作成</button>
-    <button type="button" onclick="closeModal()" style="position:absolute; top:5px; right:10px; border:none; background:none; font-size:20px; cursor:pointer;">✖️</button>
+    <button type="button" onclick="closeModal()" style="position:absolute; top:5px; right:10px; border:none; background:none; cursor:pointer;">✖️</button>
   </form>
 </div>
 

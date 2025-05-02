@@ -1,9 +1,6 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<head>
-    <link rel="stylesheet" href="./style.css">
-</head>
 
 <div class="container mt-4">
   <form method="post" action="{% url 'cooking_records:cooking_record_update' form.instance.pk %}" enctype="multipart/form-data" onsubmit="return handleSubmit();">
@@ -43,28 +40,28 @@
     </div>
 
     <!-- 日付 -->
-    <div class="mb-3">
+    <div class="form-group">
       {{ form.date.label_tag }}
       {{ form.date }}
       {{ form.date.errors }}
     </div>
 
     <!-- カテゴリ -->
-    <div class="mb-3">
+    <div class="form-group">
       {{ form.cooking_category.label_tag }}
       {{ form.cooking_category }}
       {{ form.cooking_category.errors }}
     </div>
 
     <!-- 調理の手軽さ -->
-    <div class="mb-3">
+    <div class="form-group">
       {{ form.cooking_easiness.label_tag }}
       {{ form.cooking_easiness }}
       {{ form.cooking_easiness.errors }}
     </div>
 
     <!-- お気に入り（♡ボタン） -->
-    <div class="mb-3">
+    <div class="form-group">
       <label>お気に入り</label><br>
       <button type="button" id="favorite-btn" data-url="{% url 'cooking_records:toggle_favorite' pk=form.instance.pk %}" class="btn btn-link" style="font-size: 2rem;">
         {% if form.instance.is_favorite %}
@@ -76,26 +73,28 @@
     </div>
 
     <!-- メモ -->
-    <div class="mb-3">
+    <div class="form-group">
       {{ form.memo.label_tag }}
       {{ form.memo }}
       {{ form.memo.errors }}
     </div>
 
     <!-- 参考レシピ -->
-    <h3>参考レシピ</h3>
-    <ul id="recipeList">
-      {% for cr_recipe in form.instance.cooking_record_recipes.all %}
-        <li data-recipe-id="{{ cr_recipe.recipe.id }}">
-          {{ cr_recipe.recipe.name }}
-          <button type="button" class="btn btn-danger btn-sm remove-recipe-btn">削除</button>
-        </li>
-      {% endfor %}
-    </ul>
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#recipeModal">
-      ＋レシピリスト
-    </button>
-    <input type="hidden" name="recipes_hidden" id="recipesInput">
+    <div class="form-group">
+      <h3>参考レシピ</h3>
+      <ul id="recipeList">
+        {% for cr_recipe in form.instance.cooking_record_recipes.all %}
+          <li data-recipe-id="{{ cr_recipe.recipe.id }}">
+            {{ cr_recipe.recipe.name }}
+            <button type="button" class="btn btn-danger btn-sm remove-recipe-btn">削除</button>
+          </li>
+        {% endfor %}
+      </ul>
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#recipeModal">
+        ＋レシピリスト
+      </button>
+      <input type="hidden" name="recipes_hidden" id="recipesInput">
+    </div>
 
     <!-- hiddenフィールド用（最初は空） -->
     <div id="selectedRecipesHiddenArea" style="display: none;"></div>
