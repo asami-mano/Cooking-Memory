@@ -21,7 +21,7 @@
     text-decoration: none;
   }
   
-  .list-group {
+  #recipeList {
     font-size: 40px;
   }  
 </style>
@@ -51,7 +51,7 @@
   <!-- 写真プレビュー -->
   {% if form.instance.image_url %}
     <div class="mb-3">
-      <img src="{{ form.instance.image_url.url }}" alt="献立写真" style="max-width: 100%; height: auto;">
+      <img src="{{ form.instance.image_url.url }}" alt="献立写真" style="width: 100%; height: auto;">
     </div>
   {% endif %}
 

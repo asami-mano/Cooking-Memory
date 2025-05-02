@@ -1,10 +1,83 @@
 {% extends 'base.html' %}
 {% block content %}
 
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/sanitize.css' %}">
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+<style>
+  .easiness-labels {
+    margin-top: 5px;
+    font-size: 30px;
+    text-align: left;
+  }
+
+  .favorite-icon {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 100px;
+    background: none;
+    border: none
+    text-decoration: none;
+  }
+  
+  .recipe-list {
+    font-size: 40px !important;
+    color: #000000 !important;
+    text-decoration: none !important;
+  }
+
+  .update-btn {
+    display: block;
+    margin-left: auto;  /* 左側の余白を自動にして右寄せ */
+    margin-right: 10px; /* 右端との間隔 */
+    margin-bottom: 40px; /* 下との感覚 */
+    color: #000000;
+    font-size: 50px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    }
+
+  #deleteBtn {
+    background-color: red;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    text-align: center;
+    display: block;      /* ブロック要素にする */
+    margin: 0 auto;      /* 左右中央に配置 */
+  }
+
+  #deleteModal {
+    display: none;
+    position: fixed;
+    font-size: 40px;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+  }
+
+  .confirm-btn {
+    flex: 1;
+    padding: 10px 0;
+    border: none;
+    border-radius: 5px;
+    font-size: 40px;
+    width: 200px;
+    cursor: pointer;
+  }
+
+</style>
+
 <div>
   <div class="image-container" style="position: relative;">
     <img src="{{ record.image_url.url }}" alt="料理写真" style="width: 100%; height: auto;">
-    <a class="favorite-icon" style="position: absolute; top: 10px; right: 10px; font-size: 50px; background: none; border: none;">  
+    <a class="favorite-icon" style="text-decoration: none;">  
       {% if record.is_favorite %}
         ❤️
       {% else %}
@@ -14,35 +87,39 @@
   </div>
 </div>
 
-<a href="{% url 'cooking_records:cooking_record_update' pk=record.pk %}" class="btn btn-primary">
-  編集
-</a>
-<p>日付：{{ record.date }}</p>
-<p>カテゴリ：{{ record.cooking_category.name }}</p>
-<p>調理の手軽さ：
-  {% if record.cooking_easiness == 0 %}簡単
-  {% elif record.cooking_easiness == 1 %}普通
-  {% else %}手間がかかる
-  {% endif %}
-</p>
-<p>メモ：{{ record.memo }}</p>
+<a href="{% url 'cooking_records:cooking_record_update' pk=record.pk %}" class="update-btn">
+  ✏️
+</a>  
+<div class="form-group">
+  <p>日付：{{ record.date }}</p>
+  <p>カテゴリ：{{ record.cooking_category.name }}</p>
+  <p>調理の手軽さ：
+    {% if record.cooking_easiness == 0 %}簡単
+    {% elif record.cooking_easiness == 1 %}普通
+    {% else %}手間がかかる
+    {% endif %}
+  </p>
+  <p>メモ：{{ record.memo }}</p>
 
-<div>
-  <h3>参考レシピ</h3>
-  {% for cr_recipe in record.cooking_record_recipes.all %}
-    <a href="{{ cr_recipe.recipe.recipe_url }}" target="_blank">{{ cr_recipe.recipe.name }}</a><br>
-  {% endfor %}
+  <div>
+    <label>参考レシピ：</label>
+    <div class="recipe-list">
+      {% for cr_recipe in record.cooking_record_recipes.all %}
+        <a href="{{ cr_recipe.recipe.recipe_url }}" target="_blank">{{ cr_recipe.recipe.name }}</a><br>
+      {% endfor %}
+    </div>
+  </div>
+  <button id="deleteBtn">削除</button>
 </div>
-<button id="deleteBtn" style="background-color: red; color: white; padding: 10px 20px; border: none; border-radius: 5px;">削除</button>
 
 <!-- モーダル -->
-<div id="deleteModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5);">
-  <div style="background: white; padding: 20px; margin: 100px auto; width: 300px; border-radius: 8px; text-align: center;">
+<div id="deleteModal">
+  <div style="background: white; padding: 20px; margin: 100px auto; width: 50%; border-radius: 8px; text-align: center;">
     <p>この料理メモを削除しますか？</p>
     <form method="POST" action="{% url 'cooking_records:cooking_record_delete' record.pk %}">
       {% csrf_token %}
-      <button type="submit" style="background-color: red; color: white; margin-right: 10px;">はい</button>
-      <button type="button" id="cancelBtn">いいえ</button>
+      <button type="submit" class="confirm-btn" style="background-color: red; color: white;">はい</button>
+      <button type="button" id="cancelBtn" class="confirm-btn">いいえ</button>
     </form>
   </div>
 </div>
