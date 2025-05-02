@@ -12,7 +12,7 @@ from django.conf.urls.static import static
 
 app_name='accounts'
 urlpatterns = [
-    path('home/',HomeView.as_view(),name='home'),
+    # path('home/',HomeView.as_view(),name='home'),
     path('regist/',RegistUserView.as_view(),name='regist'),
     path('user_login/',UserLoginView.as_view(),name='user_login'),
     path('user_logout/',UserLogoutView.as_view(),name='user_logout'),
@@ -29,7 +29,3 @@ urlpatterns = [
     path('change_username/', ChangeUsernameView.as_view(), name='change_username'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
-# urlpatterns += [
-#     path('share_users/', ShareUsersView.as_view(), name='share_users'),
-# ]

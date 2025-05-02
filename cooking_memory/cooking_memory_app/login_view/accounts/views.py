@@ -126,11 +126,6 @@ class MyPasswordChangeView(LoginRequiredMixin, FormView):
         update_session_auth_hash(self.request, user)  # ← これでログアウトされないように！
         return super().form_valid(form)
     
-    # def get_success_url(self):
-    #     next_url = self.request.GET.get('next')
-    #     print('next: ', next_url)
-    #     return next_url if next_url else self.success_url
-
 class MyPageView(LoginRequiredMixin, TemplateView):
     template_name = 'mypage.html'
         

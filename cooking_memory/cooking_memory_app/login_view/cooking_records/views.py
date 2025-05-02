@@ -101,12 +101,6 @@ class CookingRecordUpdateView(LoginRequiredMixin, UpdateView):
     form_class = CookingRecordForm
     template_name = 'cooking_records/record_update_form.html'
     success_url = reverse_lazy('cooking_records:my_list')
-    # context_object_name = 'record'# テンプレートで使う変数名（record）
-
-    # def get_form_kwargs(self):
-    #         kwargs = super().get_form_kwargs()
-    #         kwargs['user'] = self.request.user
-    #         return kwargs
         
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -119,7 +113,6 @@ class CookingRecordUpdateView(LoginRequiredMixin, UpdateView):
 
         # いったん既存の関連を全部削除
         CookingRecordRecipe.objects.filter(cooking_record=self.object).delete()
-        # self.object.cooking_record_recipes.all().delete()
 
         # 新しくレシピを紐づけ直す
         recipe_ids = self.request.POST.getlist('recipes')
