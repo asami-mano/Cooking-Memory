@@ -18,8 +18,8 @@ from django.views.generic.edit import FormView
 
 User = get_user_model()
 
-class HomeView(TemplateView):
-    template_name='home.html'
+class PortfolioView(TemplateView):
+    template_name='portfolio.html'
     
 class RegistUserView(CreateView):
     template_name = 'regist.html'
@@ -69,11 +69,6 @@ class UserLogoutView(View):
         logout(request)
         return redirect('cooking_records:my_list')
     
-class UserLoginView(LoginView):
-    template_name = 'user_login.html'
-    next_page = reverse_lazy('accounts:home')
-    form_class = UserLoginForm
-
 class UserLogoutView2(LogoutView):
     next_page = reverse_lazy('cooking_records:my_list')
     http_method_names = ['get', 'post']
@@ -126,6 +121,7 @@ class MyPasswordChangeView(LoginRequiredMixin, FormView):
         update_session_auth_hash(self.request, user)  # ← これでログアウトされないように！
         return super().form_valid(form)
     
+
 class MyPageView(LoginRequiredMixin, TemplateView):
     template_name = 'mypage.html'
         
