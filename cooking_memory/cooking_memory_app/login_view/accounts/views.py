@@ -74,18 +74,10 @@ class UserLogoutView2(LogoutView):
     http_method_names = ['get', 'post']
     template_name = 'user_logout.html'   
     
-class UserView(LoginRequiredMixin, TemplateView):
-    template_name = 'user.html'
-    
-    @method_decorator(login_required)
-    def get(self, request, *args, **kwargs):
-        context = self.get_context_data(**kwargs)
-        return self.render_to_response(context)
-
 class ChangeEmailView(LoginRequiredMixin,FormView):
     template_name='change_email.html'
     form_class=EmailChangeForm
-    success_url = reverse_lazy('accounts:user')
+    success_url = reverse_lazy('accounts:mypage')
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -106,7 +98,7 @@ class ChangeEmailView(LoginRequiredMixin,FormView):
 class MyPasswordChangeView(LoginRequiredMixin, FormView):
     template_name='change_password.html'
     form_class=PasswordChangeForm
-    success_url = reverse_lazy('accounts:user')
+    success_url = reverse_lazy('accounts:mypage')
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
