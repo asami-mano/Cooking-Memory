@@ -10,6 +10,10 @@
     margin-top: 100px; /* ヘッダーの高さ分だけ空ける */
   }
 
+  .content {
+    padding-left: 200px0px; /* 左側に30pxの余白 */
+  }
+
   .easiness-labels {
     margin-top: 5px;
     font-size: 30px;
@@ -38,7 +42,7 @@
     margin-right: 10px; /* 右端との間隔 */
     margin-bottom: 40px; /* 下との感覚 */
     color: #000000;
-    font-size: 50px;
+    font-size: 80px;
     background: none;
     border: none;
     cursor: pointer;
@@ -79,45 +83,44 @@
 </style>
 
 <div class="main-content">
-  <div>
-    <div class="image-container" style="position: relative;">
-      <img src="{{ record.image_url.url }}" alt="料理写真" style="width: 100%; height: auto;">
-      <a class="favorite-icon" style="text-decoration: none;">  
-        {% if record.is_favorite %}
-          ❤️
-        {% else %}
-          🤍
-        {% endif %}
-      </a>
-    </div>
-  </div>
-
-  <a href="{% url 'cooking_records:cooking_record_update' pk=record.pk %}" class="update-btn">
-    ✏️
-  </a>  
-  <div class="form-group">
-    <p>日付：{{ record.date|date:"Y/n/j" }}</p>
-    <p>カテゴリ：{{ record.cooking_category.name }}</p>
-    <p>調理の手軽さ：
-      {% if record.cooking_easiness == 0 %}★☆☆
-      {% elif record.cooking_easiness == 1 %}★★☆
-      {% else %}★★★
+  <div class="image-container" style="position: relative;">
+    <img src="{{ record.image_url.url }}" alt="料理写真" style="width: 100%; height: auto;">
+    <a class="favorite-icon" style="text-decoration: none;">  
+      {% if record.is_favorite %}
+        ❤️
+      {% else %}
+        🤍
       {% endif %}
-    </p>
-    <p>メモ：</p>
-    <p>{{ record.memo|linebreaksbr }}</p>
-
-    <div>
-      <label>参考レシピ：</label>
-      <div class="recipe-list">
-        {% for cr_recipe in record.cooking_record_recipes.all %}
-          <a href="{{ cr_recipe.recipe.recipe_url }}" target="_blank">{{ cr_recipe.recipe.name }}</a><br>
-        {% endfor %}
-      </div>
-    </div>
-    <button id="deleteBtn">削除</button>
+    </a>
   </div>
-</div>
+
+  <div class="content">
+    <a href="{% url 'cooking_records:cooking_record_update' pk=record.pk %}" class="update-btn">
+      ✏️
+    </a>  
+    <div class="form-group">
+      <p>日付：{{ record.date|date:"Y/n/j" }}</p>
+      <p>カテゴリ：{{ record.cooking_category.name }}</p>
+      <p>調理の手軽さ：
+        {% if record.cooking_easiness == 0 %}★☆☆
+        {% elif record.cooking_easiness == 1 %}★★☆
+        {% else %}★★★
+        {% endif %}
+      </p>
+      <p>メモ：</p>
+      <p>{{ record.memo|linebreaksbr }}</p>
+
+      <div>
+        <label>参考レシピ：</label>
+        <div class="recipe-list">
+          {% for cr_recipe in record.cooking_record_recipes.all %}
+            <a href="{{ cr_recipe.recipe.recipe_url }}" target="_blank">{{ cr_recipe.recipe.name }}</a><br>
+          {% endfor %}
+        </div>
+      </div>
+      <button id="deleteBtn">削除</button>
+    </div>
+  </div>
 
 <!-- モーダル -->
 <div id="deleteModal">
