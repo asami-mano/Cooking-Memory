@@ -2,83 +2,86 @@
 {% block content %}
 
 <style>
-    .header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 10px;
-        }
-    
-    .search-form {
-        display: flex;
-        width: 100%;
-        margin: 0 10px; /* 少し余白が欲しければ */
+  .main-content {
+    margin-top: 100px; /* ヘッダーの高さ分だけ空ける */
+  }
+
+  .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px;
+      }
+  
+  .search-form {
+      display: flex;
+      width: 100%;
+      margin: 0 10px; /* 少し余白が欲しければ */
 }
-    
-    .search-form input {
-        font-size: 40px;
-        padding: 4px;
-        width: 90%;
-        box-sizing: border-box; /* パディング込みでも幅が崩れないように */
-        }
-    
-    .search-form button {
-        font-size: 50px;
-        padding: 5px 15px;
-        }
-        
-    .recipe-list {
-        font-size: 40px;
-        list-style: none;
-        padding: 0;
-        }
-    
-    .recipe-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px;
-        border-bottom: 1px solid #ccc;
-        }
-    
-    .recipe-info {
-        max-width: 900px; /* 例として親要素の幅を設定 */
-        }        
-
-    .recipe-info a,
-    .arrow {
-        font-size: 30px;
-        color: gray;
-        text-decoration: none; /* 下線消したい場合 */
-        }
-    
-    .recipe-info a {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        display: inline-block;
-        max-width: 90%;
-        }
-
-    .add-btn {
-        position: fixed;
-        bottom: 40px;
-        right: 40px;
-        background-color: #e0e0e0;
-        color: #000000;
-        font-size: 60px;
-        border-radius: 50%;
-        width: 100px;
-        height: 100px;
-        text-align: center;
-        line-height: 100px;
-        text-decoration: none;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-        transition: background-color 0.3s;
-        z-index: 1000;
-        }
-    
+  
+  .search-form input {
+      font-size: 40px;
+      padding: 4px;
+      width: 90%;
+      box-sizing: border-box; /* パディング込みでも幅が崩れないように */
+      }
+  
+  .search-form button {
+      font-size: 50px;
+      padding: 5px 15px;
+      }
       
+  .recipe-list {
+      font-size: 40px;
+      list-style: none;
+      padding: 0;
+      }
+  
+  .recipe-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      border-bottom: 1px solid #ccc;
+      }
+  
+  .recipe-info {
+      max-width: 900px; /* 例として親要素の幅を設定 */
+      }        
+
+  .recipe-info a,
+  .arrow {
+      font-size: 30px;
+      color: gray;
+      text-decoration: none; /* 下線消したい場合 */
+      }
+  
+  .recipe-info a {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: inline-block;
+      max-width: 90%;
+      }
+
+  .add-btn {
+      position: fixed;
+      bottom: 40px;
+      right: 40px;
+      background-color: #e0e0e0;
+      color: #000000;
+      font-size: 60px;
+      border-radius: 50%;
+      width: 100px;
+      height: 100px;
+      text-align: center;
+      line-height: 100px;
+      text-decoration: none;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+      transition: background-color 0.3s;
+      z-index: 1000;
+      }
+    
 </style>
 
 <div class="main-content">
