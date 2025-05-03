@@ -8,6 +8,10 @@
   padding: 0;
 } */
 
+.main-content {
+  margin-top: 60px; /* ヘッダーの高さ分だけ空ける */
+}
+
 /* 全体を中央に寄せる */
 .page-wrapper {
   display: flex;
