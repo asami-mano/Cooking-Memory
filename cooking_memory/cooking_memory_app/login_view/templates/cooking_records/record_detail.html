@@ -104,8 +104,8 @@
       {% else %}★★★
       {% endif %}
     </p>
-    <p>メモ：<br>
-      {{ record.memo }}</p>
+    <p>メモ：</p>
+    <p>{{ record.memo|linebreaksbr }}</p>
 
     <div>
       <label>参考レシピ：</label>

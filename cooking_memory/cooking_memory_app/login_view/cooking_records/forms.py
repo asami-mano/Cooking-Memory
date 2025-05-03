@@ -6,7 +6,7 @@ class CookingRecordForm(forms.ModelForm):
         model = CookingRecord
         fields = ['date', 'cooking_category', 'image_url', 'cooking_easiness', 'memo']
         widgets = {
-            'date': forms.DateInput(attrs={'type': 'date','class': 'form-control'}),
+            'date': forms.DateInput(attrs={'type': 'date'}),
             'memo': forms.Textarea(attrs={'rows': 3}),
         }
     def __init__(self, *args, **kwargs):

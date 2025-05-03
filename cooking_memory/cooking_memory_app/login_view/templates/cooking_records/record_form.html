@@ -12,7 +12,14 @@
 
   .modal-content {
     text-align: center;
+    width: 800px;
     font-size: 40px;
+  }
+
+  .modal-body input[type="checkbox"] {
+    width: 30px;
+    height: 30px;
+    margin-right: 8px;
   }
 
   .easiness-labels {
@@ -97,11 +104,12 @@
       <!-- 隠しフィールドでフォームに入れる -->
       <input type="hidden" name="is_favorite" id="isFavoriteInput" value="0">
     </div>
+
     <div class="form-group">
-      {{ form.memo.label }}<br> 
+      <label for="{{ form.memo.id_for_label }}">{{ form.memo.label }}</label>
       {{ form.memo }}
     </div>
-
+    
     <div class="form-group">
       <label>参考レシピ</label>
       <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#recipeModal">
