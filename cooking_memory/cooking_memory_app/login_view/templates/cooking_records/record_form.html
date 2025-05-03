@@ -70,14 +70,14 @@
 
     <button id="selectFromAlbum" type="button" style="font-size: 70px; margin-bottom: 20px;">📷</button>
 
-    <div class="form-group d-flex align-items-center">
-      <label for="{{ form.date.id_for_label }}" class="me-2 mb-0">{{ form.date.label }}</label>
+    <div class="form-group" style="display: flex; align-items: center; gap: 10px;">
+      <label for="{{ form.date.id_for_label }}" style="white-space: nowrap;">{{ form.date.label }}</label>
       {{ form.date }}
     </div>
-    
     {% comment %} <div class="form-group">
       {{ form.date.label }} {{ form.date }}
     </div> {% endcomment %}
+
     <div class="form-group">
       {{ form.cooking_category.label }} {{ form.cooking_category }}
       <a href="#" id="open-category-modal">＋新規作成</a>
