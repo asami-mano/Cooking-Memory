@@ -86,7 +86,7 @@
 
   <form method="post" enctype="multipart/form-data" action="{% url 'accounts:upload_profile_image' %}">
     {% csrf_token %}
-    <a style="font-size: 20px;"><input type="file" name="image"></a>
+    <a style="font-size: 40px;"><input type="file" name="image"></a>
     <button type="submit">画像を登録</button>
   </form>
 
