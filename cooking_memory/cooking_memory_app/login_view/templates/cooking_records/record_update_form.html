@@ -23,6 +23,11 @@
     margin-right: 8px;
   }
 
+  input[type="date"] {
+    flex-grow: 1;
+    min-width: 200px;
+  }
+
   .easiness-labels {
     margin-top: 5px;
     font-size: 30px;
@@ -79,9 +84,8 @@
     </div>
 
     <!-- 日付 -->
-    <div class="form-group">
-      {{ form.date.label }}
-      {{ form.date }}
+    <div class="form-group" style="display: flex; align-items: center; gap: 10px;">
+      <label for="{{ form.date.id_for_label }}" style="white-space: nowrap;">{{ form.date.label }}</label>
       {{ form.date.errors }}
     </div>
 
