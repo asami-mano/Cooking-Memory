@@ -29,84 +29,86 @@
   }  
 </style>
 
-<form method="post" enctype="multipart/form-data">
-  {% csrf_token %}
+<div class="main-content">
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
 
 
-  {% if form.errors %}
-  <div class="alert alert-danger">
-      <strong>エラーがあります</strong>
-      <ul>
-      {% for field in form %}
-          {% for error in field.errors %}
-          <li>{{ field.label }}: {{ error }}</li>
-          {% endfor %}
-      {% endfor %}
-      {% for error in form.non_field_errors %}
-          <li>{{ error }}</li>
-      {% endfor %}
-      </ul>
-  </div>
-  {% endif %}
-
-  <!-- ここに隠しfileInputを設置 -->
-  <input type="file" id="fileInput" name="image_url" accept="image/*" style="display: none;">
-
-  <div id="photoPreviewArea" style="margin-top: 1px;">
-    <img id="photoPreview" src="" alt="プレビュー" style="max-width: 100%; display: none;">
-  </div>
-  <button type="button" id="openPhotoModal" style="font-size: 70px; margin-bottom: 20px;">📷</button>
-
-  <div class="form-group">
-    {{ form.date.label }} {{ form.date }}
-  </div>
-  <div class="form-group">
-    {{ form.cooking_category.label }} {{ form.cooking_category }}
-    <a href="#" id="open-category-modal">＋新規作成</a>
-  </div>
-
-  <div class="form-group">
-    <label>調理の手軽さ</label>
-    <div class="star-rating">
-      <input type="radio" id="easiness-3" name="cooking_easiness" value="2">
-      <label for="easiness-3">★</label>
-      <input type="radio" id="easiness-2" name="cooking_easiness" value="1" checked>
-      <label for="easiness-2">★</label>
-      <input type="radio" id="easiness-1" name="cooking_easiness" value="0">
-      <label for="easiness-1">★</label>
+    {% if form.errors %}
+    <div class="alert alert-danger">
+        <strong>エラーがあります</strong>
+        <ul>
+        {% for field in form %}
+            {% for error in field.errors %}
+            <li>{{ field.label }}: {{ error }}</li>
+            {% endfor %}
+        {% endfor %}
+        {% for error in form.non_field_errors %}
+            <li>{{ error }}</li>
+        {% endfor %}
+        </ul>
     </div>
-    <div class="easiness-labels">
-      <span>★簡単  ★★普通  ★★★手間がかかる</span>
+    {% endif %}
+
+    <!-- ここに隠しfileInputを設置 -->
+    <input type="file" id="fileInput" name="image_url" accept="image/*" style="display: none;">
+
+    <div id="photoPreviewArea" style="margin-top: 1px;">
+      <img id="photoPreview" src="" alt="プレビュー" style="max-width: 100%; display: none;">
     </div>
-  </div>
+    <button type="button" id="openPhotoModal" style="font-size: 70px; margin-bottom: 20px;">📷</button>
 
-  <div class="form-group">
-    <label>お気に入り</label>
-    <button type="button" id="favoriteBtn" data-is-favorite="0">🤍</button>
-    <!-- 隠しフィールドでフォームに入れる -->
-    <input type="hidden" name="is_favorite" id="isFavoriteInput" value="0">
-  </div>
-  <div class="form-group">
-    {{ form.memo.label }}<br> 
-    {{ form.memo }}
-  </div>
+    <div class="form-group">
+      {{ form.date.label }} {{ form.date }}
+    </div>
+    <div class="form-group">
+      {{ form.cooking_category.label }} {{ form.cooking_category }}
+      <a href="#" id="open-category-modal">＋新規作成</a>
+    </div>
 
-  <div class="form-group">
-    <label>参考レシピ</label>
-    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#recipeModal">
-      ＋ レシピリスト
-    </button>
-  </div>
-  <div id="selected-recipes">
-    <input type="hidden" name="recipes" id="selectedRecipeIds">
-    <ul id="selectedRecipesList" class="list-group"></ul>
-  </div>
+    <div class="form-group">
+      <label>調理の手軽さ</label>
+      <div class="star-rating">
+        <input type="radio" id="easiness-3" name="cooking_easiness" value="2">
+        <label for="easiness-3">★</label>
+        <input type="radio" id="easiness-2" name="cooking_easiness" value="1" checked>
+        <label for="easiness-2">★</label>
+        <input type="radio" id="easiness-1" name="cooking_easiness" value="0">
+        <label for="easiness-1">★</label>
+      </div>
+      <div class="easiness-labels">
+        <span>★簡単  ★★普通  ★★★手間がかかる</span>
+      </div>
+    </div>
 
-  <!-- hiddenフィールド用（最初は空） -->
-  <div id="selectedRecipesHiddenArea" style="display:none;"></div>
+    <div class="form-group">
+      <label>お気に入り</label>
+      <button type="button" id="favoriteBtn" data-is-favorite="0">🤍</button>
+      <!-- 隠しフィールドでフォームに入れる -->
+      <input type="hidden" name="is_favorite" id="isFavoriteInput" value="0">
+    </div>
+    <div class="form-group">
+      {{ form.memo.label }}<br> 
+      {{ form.memo }}
+    </div>
 
-  <button type="submit">登録</button>
-</form>
+    <div class="form-group">
+      <label>参考レシピ</label>
+      <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#recipeModal">
+        ＋ レシピリスト
+      </button>
+    </div>
+    <div id="selected-recipes">
+      <input type="hidden" name="recipes" id="selectedRecipeIds">
+      <ul id="selectedRecipesList" class="list-group"></ul>
+    </div>
+
+    <!-- hiddenフィールド用（最初は空） -->
+    <div id="selectedRecipesHiddenArea" style="display:none;"></div>
+
+    <button type="submit">登録</button>
+  </form>
+</div>
 
 <!-- モーダル本体 -->
 <div class="modal" id="photoModal" style="display:none;">
@@ -142,7 +144,7 @@
   </form>
 </div>
 
-<div class="modal fade" id="recipeModal" tabindex="-1"">
+<div class="modal fade" id="recipeModal" tabindex="-1">
   <div class="modal-dialog modal-xl">
     <div class="modal-content">
 

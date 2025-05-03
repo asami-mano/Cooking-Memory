@@ -26,112 +26,114 @@
   }  
 </style>
 
-<form method="post" action="{% url 'cooking_records:cooking_record_update' form.instance.pk %}" enctype="multipart/form-data" onsubmit="return handleSubmit();">
-  {% csrf_token %}
-  {{ form.non_field_errors }}
+<div class="main-content">
+  <form method="post" action="{% url 'cooking_records:cooking_record_update' form.instance.pk %}" enctype="multipart/form-data" onsubmit="return handleSubmit();">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
 
 
-  {% if form.errors %}
-  <div class="alert alert-danger">
-      <strong>エラーがあります</strong>
-      <ul>
-      {% for field in form %}
-          {% for error in field.errors %}
-          <li>{{ field.label }}: {{ error }}</li>
-          {% endfor %}
-      {% endfor %}
-      {% for error in form.non_field_errors %}
-          <li>{{ error }}</li>
-      {% endfor %}
+    {% if form.errors %}
+    <div class="alert alert-danger">
+        <strong>エラーがあります</strong>
+        <ul>
+        {% for field in form %}
+            {% for error in field.errors %}
+            <li>{{ field.label }}: {{ error }}</li>
+            {% endfor %}
+        {% endfor %}
+        {% for error in form.non_field_errors %}
+            <li>{{ error }}</li>
+        {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+
+    <!-- 写真プレビュー -->
+    {% if form.instance.image_url %}
+      <div class="mb-3">
+        <img src="{{ form.instance.image_url.url }}" alt="献立写真" style="width: 100%; height: auto;">
+      </div>
+    {% endif %}
+
+    <!-- 写真アップロード -->
+    <div class="fmb-3" style="font-size: 30px;">
+      {{ form.image_url }}
+      {{ form.image_url.errors }}
+    </div>
+
+    <!-- 日付 -->
+    <div class="form-group">
+      {{ form.date.label }}
+      {{ form.date }}
+      {{ form.date.errors }}
+    </div>
+
+    <!-- カテゴリ -->
+    <div class="form-group">
+      {{ form.cooking_category.label }}
+      {{ form.cooking_category }}
+      {{ form.cooking_category.errors }}
+      <a href="#" id="open-category-modal">＋新規作成</a>
+    </div>
+
+    <!-- 調理の手軽さ -->
+    <div class="form-group">
+      <label>調理の手軽さ</label>
+      <div class="star-rating">
+        <input type="radio" id="easiness-3" name="cooking_easiness" value="2">
+        <label for="easiness-3">★</label>
+        <input type="radio" id="easiness-2" name="cooking_easiness" value="1" checked>
+        <label for="easiness-2">★</label>
+        <input type="radio" id="easiness-1" name="cooking_easiness" value="0">
+        <label for="easiness-1">★</label>
+      </div>
+      <div class="easiness-labels">
+        <span>★簡単  ★★普通  ★★★手間がかかる</span>
+      </div>
+    </div>
+
+    <!-- お気に入り（♡ボタン） -->
+    <div class="form-group">
+      <label>お気に入り</label><br>
+      <button type="button" id="favorite-btn" data-url="{% url 'cooking_records:toggle_favorite' pk=form.instance.pk %}" class="btn btn-link">
+        {% if form.instance.is_favorite %}
+            ❤️
+        {% else %}
+            🤍
+        {% endif %}
+      </button>
+    </div>
+
+    <!-- メモ -->
+    <div class="form-group">
+      {{ form.memo.label }}<br>
+      {{ form.memo }}
+      {{ form.memo.errors }}
+    </div>
+
+    <!-- 参考レシピ -->
+    <div class="form-group">
+      <label>参考レシピ</label>
+      <ul id="recipeList">
+        {% for cr_recipe in form.instance.cooking_record_recipes.all %}
+          <li data-recipe-id="{{ cr_recipe.recipe.id }}">
+            {{ cr_recipe.recipe.name }}
+            <button type="button" class="btn btn-danger btn-sm remove-recipe-btn" style="font-size: 30px;">削除</button>
+          </li>
+        {% endfor %}
       </ul>
-  </div>
-  {% endif %}
-
-
-  <!-- 写真プレビュー -->
-  {% if form.instance.image_url %}
-    <div class="mb-3">
-      <img src="{{ form.instance.image_url.url }}" alt="献立写真" style="width: 100%; height: auto;">
+      <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#recipeModal">
+        ＋レシピリスト
+      </button>
+      <input type="hidden" name="recipes_hidden" id="recipesInput">
     </div>
-  {% endif %}
 
-  <!-- 写真アップロード -->
-  <div class="fmb-3" style="font-size: 30px;">
-    {{ form.image_url }}
-    {{ form.image_url.errors }}
-  </div>
-
-  <!-- 日付 -->
-  <div class="form-group">
-    {{ form.date.label }}
-    {{ form.date }}
-    {{ form.date.errors }}
-  </div>
-
-  <!-- カテゴリ -->
-  <div class="form-group">
-    {{ form.cooking_category.label }}
-    {{ form.cooking_category }}
-    {{ form.cooking_category.errors }}
-    <a href="#" id="open-category-modal">＋新規作成</a>
-  </div>
-
-  <!-- 調理の手軽さ -->
-  <div class="form-group">
-    <label>調理の手軽さ</label>
-    <div class="star-rating">
-      <input type="radio" id="easiness-3" name="cooking_easiness" value="2">
-      <label for="easiness-3">★</label>
-      <input type="radio" id="easiness-2" name="cooking_easiness" value="1" checked>
-      <label for="easiness-2">★</label>
-      <input type="radio" id="easiness-1" name="cooking_easiness" value="0">
-      <label for="easiness-1">★</label>
-    </div>
-    <div class="easiness-labels">
-      <span>★簡単  ★★普通  ★★★手間がかかる</span>
-    </div>
-  </div>
-
-  <!-- お気に入り（♡ボタン） -->
-  <div class="form-group">
-    <label>お気に入り</label><br>
-    <button type="button" id="favorite-btn" data-url="{% url 'cooking_records:toggle_favorite' pk=form.instance.pk %}" class="btn btn-link">
-      {% if form.instance.is_favorite %}
-          ❤️
-      {% else %}
-          🤍
-      {% endif %}
-    </button>
-  </div>
-
-  <!-- メモ -->
-  <div class="form-group">
-    {{ form.memo.label }}<br>
-    {{ form.memo }}
-    {{ form.memo.errors }}
-  </div>
-
-  <!-- 参考レシピ -->
-  <div class="form-group">
-    <label>参考レシピ</label>
-    <ul id="recipeList">
-      {% for cr_recipe in form.instance.cooking_record_recipes.all %}
-        <li data-recipe-id="{{ cr_recipe.recipe.id }}">
-          {{ cr_recipe.recipe.name }}
-          <button type="button" class="btn btn-danger btn-sm remove-recipe-btn" style="font-size: 30px;">削除</button>
-        </li>
-      {% endfor %}
-    </ul>
-    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#recipeModal">
-      ＋レシピリスト
-    </button>
-    <input type="hidden" name="recipes_hidden" id="recipesInput">
-  </div>
-
-  <!-- hiddenフィールド用（最初は空） -->
-  <div id="selectedRecipesHiddenArea" style="display: none;"></div>
-  <button type="submit">更新</button>
-</form>
+    <!-- hiddenフィールド用（最初は空） -->
+    <div id="selectedRecipesHiddenArea" style="display: none;"></div>
+    <button type="submit">更新</button>
+  </form>
+</div>
 
 <!-- モーダル -->
 <div id="category-modal" style="display:none; position:fixed; top:30%; left:30%; background:#fff; font-size:40px; border:1px solid #ccc; padding:20px;">

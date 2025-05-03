@@ -9,6 +9,11 @@
     <style>
         .navbar-custom {
             background-color: rgba(251, 217, 114, 0.66); /* 薄黄色 */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
         }
         .navbar-custom .navbar-brand,
         .navbar-custom .nav-link {
@@ -19,15 +24,13 @@
     </style>
         
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="{% url 'accounts:mypage' %}">マイページ</a>
-        <a class="navbar-brand"href="{% url 'cooking_records:my_list' %}">マイリスト</a>
-        <a class="navbar-brand"href="{% url 'recipes:recipe_list' %}">レシピリスト</a>
-    </div>
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{% url 'accounts:mypage' %}">マイページ</a>
+            <a class="navbar-brand"href="{% url 'cooking_records:my_list' %}">マイリスト</a>
+            <a class="navbar-brand"href="{% url 'recipes:recipe_list' %}">レシピリスト</a>
+        </div>
     </nav>
-      
-    </nav>
-        
+              
     <form id="logout-form" method="POST" action="{% url 'accounts:user_logout_2' %}">
         {% csrf_token %}
     </form>

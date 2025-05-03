@@ -2,42 +2,43 @@
 {% block content %}
 
 <style>
-    form {
-        display: flex;
-        flex-direction: column;
-        align-items: center; /* 子要素（入力欄・ボタン）を中央に */
-        margin-top: 5%;
-    }
-  
-    form div {
-        margin-bottom: 50px;
-        width: 100%;
-        max-width: 800px; /* 入力欄の幅を制限 */
-    }
-    label {
-        display: block;
-        font-size: 60px;
-    }
+  form {
+      display: flex;
+      flex-direction: column;
+      align-items: center; /* 子要素（入力欄・ボタン）を中央に */
+      margin-top: 5%;
+  }
 
-    .input-large {
-        font-size: 50px;
-        padding: 10px;
-        width: 100%;
-      }
-      
-    .btn-large {
-        font-size: 60px;
-        padding: 10px 30px;
-      }
-      
-    .btn-submit {
-        font-size: 60px;
-        padding: 10px 30px;
-      }
+  form div {
+      margin-bottom: 50px;
+      width: 100%;
+      max-width: 800px; /* 入力欄の幅を制限 */
+  }
+  label {
+      display: block;
+      font-size: 60px;
+  }
+
+  .input-large {
+      font-size: 50px;
+      padding: 10px;
+      width: 100%;
+    }
+    
+  .btn-large {
+      font-size: 60px;
+      padding: 10px 30px;
+    }
+    
+  .btn-submit {
+      font-size: 60px;
+      padding: 10px 30px;
+    }
     
 </style>
   
-<form method="post" class="form-container">
+<div class="main-content">
+  <form method="post" class="form-container">
     {% csrf_token %}
     <div class="form-group">
       <label>URL:</label><br>
@@ -51,7 +52,7 @@
     </div>
     <button type="submit" class="btn-submit">リストに追加</button>
   </form>
-  
+    
   {% comment %} <script>
   function fetchTitle() {
     const url = document.getElementById('recipe-url').value;
@@ -72,5 +73,6 @@
     xhr.send();
   }
   </script> {% endcomment %}
-  
+</div>
+
 {% endblock %}

@@ -81,27 +81,29 @@
       
 </style>
 
-<div class="header">
-    <form method="get" class="search-form">
-      <input type="text" name="q" value="{{ query }}" placeholder="レシピを検索">
-      <button type="submit">🔍</button>
-    </form>
+<div class="main-content">
+  <div class="header">
+      <form method="get" class="search-form">
+        <input type="text" name="q" value="{{ query }}" placeholder="レシピを検索">
+        <button type="submit">🔍</button>
+      </form>
+    </div>
+    
+    <ul class="recipe-list">
+      {% for recipe in recipes %}
+        <li class="recipe-item">
+          <div class="recipe-info">
+            <p class="recipe-name">{{ recipe.name }}</p>
+            <a href="{{ recipe.recipe_url }}" target="_blank">{{ recipe.recipe_url }}</a>
+          </div>
+          <a href="{{ recipe.recipe_url }}" target="_blank" class="arrow">＞</a>
+        </li>
+      {% empty %}
+        <li>レシピが見つかりませんでした。</li>
+      {% endfor %}
+    </ul>
+    
+    <a href="{% url 'recipes:add_recipe' %}" class="add-btn">＋</a>
   </div>
-  
-  <ul class="recipe-list">
-    {% for recipe in recipes %}
-      <li class="recipe-item">
-        <div class="recipe-info">
-          <p class="recipe-name">{{ recipe.name }}</p>
-          <a href="{{ recipe.recipe_url }}" target="_blank">{{ recipe.recipe_url }}</a>
-        </div>
-        <a href="{{ recipe.recipe_url }}" target="_blank" class="arrow">＞</a>
-      </li>
-    {% empty %}
-      <li>レシピが見つかりませんでした。</li>
-    {% endfor %}
-  </ul>
-  
-  <a href="{% url 'recipes:add_recipe' %}" class="add-btn">＋</a>
-  
-  {% endblock  %}
+
+{% endblock  %}

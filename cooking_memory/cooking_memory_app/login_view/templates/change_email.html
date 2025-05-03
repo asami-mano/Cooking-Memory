@@ -27,17 +27,20 @@
     }
 </style>  
 
-<form method="POST">
-    {% csrf_token %}
-    <div>
-        {{ form.email.label_tag }}<br>
-        {{ form.email }}
-    </div>
-    <div>
-        {{ form.new_email.label_tag }}<br>
-        {{ form.new_email }}
-    </div>
-    <input type="submit" value="変更">
+<div class="main-content">
+    <form method="POST">
+        {% csrf_token %}
+        <div>
+            {{ form.email.label_tag }}<br>
+            {{ form.email }}
+        </div>
+        <div>
+            {{ form.new_email.label_tag }}<br>
+            {{ form.new_email }}
+        </div>
+        <input type="submit" value="変更">
 
-</form>
+    </form>
+</div>
+
 {% endblock  %}
