@@ -61,6 +61,7 @@
     border: none;
     cursor: pointer;
     z-index: 2;
+    margin: 0;
   }
 
   {% comment %} @media (max-width: 768px) {
@@ -76,6 +77,7 @@
       }
   }  
  {% endcomment %}
+
   .floating-plus-btn {
     position: fixed;
     bottom: 60px;
@@ -104,18 +106,19 @@
         {% if record.image_url %}
           <img src="{{ record.image_url.url }}" alt="料理写真" />
           <a href="{% url 'cooking_records:record_detail' record.id %}" class="image-link-overlay"></a>
-              {% else %}
+          <button class="favorite-btn" onclick="toggleFavorite({{ record.id }}, this)">
+            {% if record.is_favorite %}
+              ❤️
+            {% else %}
+              🤍
+            {% endif %}
+          </button>
+  
+        {% else %}
             <p>画像なし</p>
             {% comment %} <img src="{% static 'images/no_image.png' %}" alt="画像なし" /> {% endcomment %}
         {% endif %}
 
-        <button class="favorite-btn" onclick="toggleFavorite({{ record.id }}, this)">
-          {% if record.is_favorite %}
-            ❤️
-          {% else %}
-            🤍
-          {% endif %}
-        </button>
       </div>
     </div>
   {% empty %}
