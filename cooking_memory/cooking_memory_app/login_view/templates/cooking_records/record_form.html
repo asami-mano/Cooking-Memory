@@ -34,7 +34,7 @@
 </style>
 
 <div class="main-content">
-  <form method="post" enctype="multipart/form-data">
+  <form method="post" enctype="multipart/form-data" action="{% url 'cooking_records:cooking_record_create' %}">
     {% csrf_token %}
 
 
@@ -64,7 +64,7 @@
     {% comment %} <div id="albumSelect">
       <button id="selectFromAlbum">アルバムから選ぶ</button>
     </div> {% endcomment %}
-    <button id="selectFromAlbum" style="font-size: 70px; margin-bottom: 20px;">📷</button>
+    <button id="selectFromAlbum" type="button" style="font-size: 70px; margin-bottom: 20px;">📷</button>
 
     <div class="form-group d-flex align-items-center">
       <label for="{{ form.date.id_for_label }}" class="me-2 mb-0">{{ form.date.label }}</label>
@@ -193,15 +193,18 @@
   
     // 📷ボタン押したらファイル選択を開く
     selectFromAlbumBtn.addEventListener('click', function() {
+      console.log('📷ボタン押された');
       fileInput.click();
     });
 
     // fileInputでファイル選んだらプレビュー表示
     fileInput.addEventListener('change', function(event) {
+      console.log('ファイル選択された');
       const file = event.target.files[0];
       if (file) {
         const reader = new FileReader();
         reader.onload = function(e) {
+          console.log('読み込み完了');
           previewImg.src = e.target.result;
           previewImg.style.display = 'block'; // 表示させる
         };
