@@ -30,7 +30,8 @@
     position: relative;
     width: 100%;
     max-width: 300px;
-    aspect-ratio: 5 / 3; /* 横長にする */
+    {% comment %} aspect-ratio: 5 / 3; /* 横長にする */ {% endcomment %}
+    aspect-ratio: 1 / 1; /* 正方形にする */
     overflow: hidden;     /* はみ出た部分を隠す */
     border: 5px solid black; /* 黒枠をつける */
   }
