@@ -10,7 +10,8 @@ from .views import(
 from django.conf import settings
 from django.conf.urls.static import static
 
-# urlpatterns = path('portfolio/',PortfolioView.as_view(),name='portfolio')
+
+urlpatterns = path('',PortfolioView.as_view(),name='portfolio')
 
 app_name='accounts'
 urlpatterns = [

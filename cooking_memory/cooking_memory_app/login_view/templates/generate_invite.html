@@ -40,7 +40,7 @@
         <label>招待用URL：</label>
         <div class="invite-url">
             <input id="invite-url" type="text" value="{{ invite_url }}" readonly style="width:70%;">
-            {% comment %} <button onclick="copyToClipboard()">コピー</button> {% endcomment %}
+            <button onclick="copyToClipboard()">コピー</button>
             <p>※このリンクを招待したい人に送ってください。</p>
             <p>※このリンクは一度利用されると無効になります。</p>
         </div>
@@ -49,14 +49,34 @@
     {% endif %}
 </div>
 
-{% comment %} <script>
+<script>
 function copyToClipboard() {
     const input = document.getElementById('invite-url');
+    input.focus(); // ← モバイルでの選択補助
     input.select();
     input.setSelectionRange(0, 99999); // モバイル対応（あとで確認）
     navigator.clipboard.writeText(input.value)
-    alert('コピーしました！');
+    
+    try {
+        const successful = document.execCommand('copy'); // fallback対応
+        if (successful) {
+            alert('コピーしました！');
+        } else {
+            throw new Error();
+        }
+    } catch (err) {
+        // モダンな clipboard API が使えるか確認
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(input.value).then(() => {
+                alert('コピーしました！');
+            }).catch(() => {
+                alert('コピーに失敗しました。手動でコピーしてください。');
+            });
+        } else {
+            alert('コピーに失敗しました。手動でコピーしてください。');
+        }
+    }
 }
-</script> {% endcomment %}
+</script>
 
 {% endblock  %}
