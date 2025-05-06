@@ -1,7 +1,12 @@
 from django import forms
 from .models import User
 from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import get_user_model
+import re
+
+User = get_user_model()
 
 class RegistForm(forms.ModelForm):
     password2 = forms.CharField(widget=forms.PasswordInput(),label='パスワード再入力')
@@ -17,6 +22,14 @@ class RegistForm(forms.ModelForm):
             'email':'メールアドレス',
             'password':'パスワード',
         }
+        
+    def clean_password(self):
+        password = self.cleaned_data.get('password')
+        if len(password) < 6:
+            raise ValidationError("パスワードは6文字以上で入力してください。")
+        if not re.match(r'^[a-zA-Z0-9]+$', password):
+            raise ValidationError("パスワードは英数字のみを使用してください。")
+        return password
         
     def clean(self):
         cleaned_data = super().clean()
