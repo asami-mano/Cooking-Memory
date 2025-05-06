@@ -15,7 +15,6 @@ urlpatterns = path('',PortfolioView.as_view(),name='portfolio')
 
 app_name='accounts'
 urlpatterns = [
-    path('portfolio/',PortfolioView.as_view(),name='portfolio'),
     path('regist/',RegistUserView.as_view(),name='regist'),
     path('user_logout/',UserLogoutView.as_view(),name='user_logout'),
     path('user_login2/',UserLoginView2.as_view(),name='user_login_2'),
