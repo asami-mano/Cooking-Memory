@@ -37,6 +37,7 @@ class RegistForm(forms.ModelForm):
         password2 = cleaned_data.get('password2')
         if password != password2:
             raise forms.ValidationError("パスワードが一致しません。")
+        return cleaned_data
 
     def save(self,commit=False):
         user=super().save(commit=False)
