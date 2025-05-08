@@ -118,7 +118,7 @@
 
       <div>
         <label>参考レシピ：</label>
-        <div class="recipe-list" style="font-size:30px;">
+        <div class="recipe-list" style="font-size:3em;">
           {% for cr_recipe in record.cooking_record_recipes.all %}
             <a href="{{ cr_recipe.recipe.recipe_url }}" target="_blank">{{ cr_recipe.recipe.name }}</a><br>
           {% endfor %}
