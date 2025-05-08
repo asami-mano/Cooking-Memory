@@ -100,33 +100,34 @@
 </style>
 
 <div class="main-content">
-  <div class="record-grid">
-  {% for record in cooking_records %}
-    <div class="record">
-      <div class="image-container">
-        {% if record.image_url %}
-          <img src="{{ record.image_url.url }}" alt="料理写真" />
-          <a href="{% url 'cooking_records:record_detail' record.id %}" class="image-link-overlay"></a>
-          <button class="favorite-btn" onclick="toggleFavorite({{ record.id }}, this)">
-            {% if record.is_favorite %}
-              ❤️
+  {% if cooking_records %}
+    <div class="record-grid">
+      {% for record in cooking_records %}
+        <div class="record">
+          <div class="image-container">
+            {% if record.image_url %}
+              <img src="{{ record.image_url.url }}" alt="料理写真" />
+              <a href="{% url 'cooking_records:record_detail' record.id %}" class="image-link-overlay"></a>
+              <button class="favorite-btn" onclick="toggleFavorite({{ record.id }}, this)">
+                {% if record.is_favorite %}
+                  ❤️
+                {% else %}
+                  🤍
+                {% endif %}
+              </button>
+      
             {% else %}
-              🤍
+                <p>画像なし</p>
+                {% comment %} <img src="{% static 'images/no_image.png' %}" alt="画像なし" /> {% endcomment %}
             {% endif %}
-          </button>
-  
-        {% else %}
-            <p>画像なし</p>
-            {% comment %} <img src="{% static 'images/no_image.png' %}" alt="画像なし" /> {% endcomment %}
-        {% endif %}
-
-      </div>
+          </div>
+        </div>
+      {% endfor %}
     </div>
-  {% empty %}
-  <div style="font-size:40px; "><br>　まだ登録はありません。<br>　下の＋ボタンから料理を登録して下さい。</div>    
-  {% endfor %}
+  {% else %}
+    <div style="font-size:40px; "><br>　まだ登録はありません。<br>　下の＋ボタンから料理を登録して下さい。</div>    
+    {% endif %}
   </div>
-</div>
 
 <script>
   function toggleFavorite(recordId, btn) {
