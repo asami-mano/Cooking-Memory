@@ -42,7 +42,7 @@
     margin-right: 10px; /* 右端との間隔 */
     margin-bottom: 40px; /* 下との感覚 */
     color: #000000;
-    font-size: 80px;
+    font-size: 40px;
     background: none;
     border: none;
     cursor: pointer;
@@ -95,15 +95,15 @@
   </div>
 
   <div class="content">
-    <a href="{% url 'cooking_records:cooking_record_update' pk=record.pk %}" class="update-btn">
-      ✏️
+    <a href="{% url 'cooking_records:cooking_record_update' pk=record.pk %}" class="update-btn" style="color: blue;">
+      編集
     </a>  
     <div class="form-group">
       <p>日付：{{ record.date|date:"Y/n/j" }}</p>
       <p>カテゴリ：{{ record.cooking_category.name }}</p>
       <p>調理の手軽さ：
-        {% if record.cooking_easiness == 0 %}★☆☆
-        {% elif record.cooking_easiness == 1 %}★★☆
+        {% if record.cooking_easiness == 0 %}☆☆★
+        {% elif record.cooking_easiness == 1 %}☆★★
         {% else %}★★★
         {% endif %}
       </p>
@@ -128,8 +128,10 @@
     <p>この料理メモを削除しますか？</p>
     <form method="POST" action="{% url 'cooking_records:cooking_record_delete' record.pk %}">
       {% csrf_token %}
-      <button type="submit" class="confirm-btn" style="background-color: red; color: white;">はい</button>
-      <button type="button" id="cancelBtn" class="confirm-btn">いいえ</button>
+      <div style="display: flex; justify-content: center; gap: 20px; margin-top: 20px;">
+        <button type="submit" class="confirm-btn" style="background-color: red; color: white; padding: 10px 20px; font-size: 40px;">はい</button>
+        <button type="button" id="cancelBtn" class="confirm-btn" style="padding: 10px 20px;">いいえ</button>
+      </div>
     </form>
   </div>
 </div>

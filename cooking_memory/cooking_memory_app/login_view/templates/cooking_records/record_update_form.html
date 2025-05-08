@@ -30,7 +30,7 @@
 
   .easiness-labels {
     margin-top: 5px;
-    font-size: 30px;
+    font-size: 40px;
     text-align: left;
   }
 
@@ -54,8 +54,8 @@
 
 
     {% if form.errors %}
-    <div class="alert alert-danger">
-        <strong>エラーがあります</strong>
+    <div class="alert alert-danger" style="color: red; font-size: 2em;">
+      <strong>エラーがあります</strong>
         <ul>
         {% for field in form %}
             {% for error in field.errors %}
@@ -91,12 +91,11 @@
     </div>
 
     <!-- カテゴリ -->
-    <div class="form-group">
-      {{ form.cooking_category.label }}
-      {{ form.cooking_category }}
-      {{ form.cooking_category.errors }}
-      <a href="#" id="open-category-modal">＋新規作成</a>
+    <div class="form-group" style="display: flex; align-items: center; gap: 10px;">
+      <label>{{ form.cooking_category.label }}</label> {{ form.cooking_category }}
+      <button href="#" id="open-category-modal">＋新規作成</button>
     </div>
+
 
     <!-- 調理の手軽さ -->
     <div class="form-group">

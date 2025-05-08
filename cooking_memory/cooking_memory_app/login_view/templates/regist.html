@@ -48,7 +48,7 @@
     <h1>くくめも</h1>
 
     {% if form.errors %}
-        <div class="form-errors">
+        <div class="form-errors" style="color: red; font-size: 2em;">
             <ul>
                 {% for field in form %}
                     {% for error in field.errors %}
@@ -61,7 +61,7 @@
             </ul>
         </div>
     {% endif %}
-    
+
     <div>
         {{ form.username.label_tag }}<br>
         {{ form.username }}

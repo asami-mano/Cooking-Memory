@@ -1,4 +1,4 @@
-from django.views.generic import ListView,CreateView
+from django.views.generic import ListView,CreateView,DeleteView
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Recipe
@@ -30,3 +30,8 @@ class RecipeCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.user = self.request.user
         return super().form_valid(form)    
+
+class RecipeDeleteView(DeleteView):
+    model = Recipe
+    template_name = 'recipe_delete.html'  # 使わないけど書く
+    success_url = reverse_lazy('recipes:recipe_list')

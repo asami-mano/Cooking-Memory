@@ -100,8 +100,8 @@
 </style>
 
 <div class="main-content">
-  <div class="record-grid">
   {% for record in cooking_records %}
+  <div class="record-grid">
     <div class="record">
       <div class="image-container">
         {% if record.image_url %}
@@ -123,7 +123,7 @@
       </div>
     </div>
   {% empty %}
-  <h2>まだ登録はありません。</h2>    
+  <div style="font-size:40px; "><br>　まだ登録はありません。<br>　下の＋ボタンから料理を登録して下さい。</div>    
   {% endfor %}
   </div>
 </div>
