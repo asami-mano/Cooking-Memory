@@ -57,24 +57,27 @@ function copyToClipboard() {
     input.setSelectionRange(0, 99999); // モバイル対応（あとで確認）
     navigator.clipboard.writeText(input.value)
     
-    try {
-        const successful = document.execCommand('copy'); // fallback対応
-        if (successful) {
-            alert('コピーしました！');
-        } else {
-            throw new Error();
-        }
-    } catch (err) {
-        // モダンな clipboard API が使えるか確認
-        if (navigator.clipboard) {
-            navigator.clipboard.writeText(input.value).then(() => {
+    // try clipboard API
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(input.value)
+            .then(() => {
                 alert('コピーしました！');
-            }).catch(() => {
-                alert('コピーに失敗しました。手動でコピーしてください。');
+            })
+            .catch(() => {
+                fallbackCopyText(input);
             });
-        } else {
-            alert('コピーに失敗しました。手動でコピーしてください。');
-        }
+    } else {
+        // fallback
+        fallbackCopyText(input);
+    }
+}
+
+function fallbackCopyText(input) {
+    try {
+        document.execCommand('copy');
+        alert('コピーしました！');
+    } catch (err) {
+        alert('コピーに失敗しました。手動でコピーしてください。');
     }
 }
 </script>

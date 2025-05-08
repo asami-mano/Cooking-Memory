@@ -41,7 +41,7 @@
     margin-left: auto;  /* 左側の余白を自動にして右寄せ */
     margin-right: 10px; /* 右端との間隔 */
     margin-bottom: 40px; /* 下との感覚 */
-    color: #000000;
+    color: blue;
     font-size: 40px;
     background: none;
     border: none;
@@ -95,7 +95,7 @@
   </div>
 
   <div class="content">
-    <a href="{% url 'cooking_records:cooking_record_update' pk=record.pk %}" class="update-btn" style="color: blue;">
+    <a href="{% url 'cooking_records:cooking_record_update' pk=record.pk %}" class="update-btn">
       編集
     </a>  
     <div class="form-group">

@@ -93,7 +93,7 @@
     <!-- カテゴリ -->
     <div class="form-group" style="display: flex; align-items: center; gap: 10px;">
       <label>{{ form.cooking_category.label }}</label> {{ form.cooking_category }}
-      <button href="#" id="open-category-modal">＋新規作成</button>
+      <a href="#" id="open-category-modal" class="create-btn">＋新規作成</a>
     </div>
 
 
@@ -139,7 +139,7 @@
         {% for cr_recipe in form.instance.cooking_record_recipes.all %}
           <li data-recipe-id="{{ cr_recipe.recipe.id }}">
             {{ cr_recipe.recipe.name }}
-            <button type="button" class="btn btn-danger btn-sm remove-recipe-btn" style="font-size: 30px;">削除</button>
+            <button type="button" class="btn btn-danger btn-sm remove-recipe-btn" style="font-size: 40px;">削除</button>
           </li>
         {% endfor %}
       </ul>
