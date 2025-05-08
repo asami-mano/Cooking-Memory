@@ -76,7 +76,7 @@
 </style>
 
 <div class="main-content">
-  <h1>マイページ</h1>
+  {% comment %} <h1>マイページ</h1> {% endcomment %}
   <!-- プロフィール画像 -->
   {% if user.image_url %}
     <div style="text-align: center;"><img src="{{ user.image_url.url }}" alt="プロフィール画像"></div>
