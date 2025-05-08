@@ -52,10 +52,8 @@
 <script>
 function copyToClipboard() {
     const input = document.getElementById('invite-url');
-    input.focus(); // ← モバイルでの選択補助
     input.select();
-    input.setSelectionRange(0, 99999); // モバイル対応（あとで確認）
-    navigator.clipboard.writeText(input.value)
+    input.setSelectionRange(0, 99999); // モバイル対応
     
     // try clipboard API
     if (navigator.clipboard && window.isSecureContext) {
