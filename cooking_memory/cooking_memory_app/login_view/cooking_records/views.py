@@ -9,6 +9,7 @@ from django.views.generic import(
     ListView,CreateView,DetailView,DeleteView,UpdateView
 )
 from django.urls import reverse_lazy
+from django.db.models import Q
 from .models import CookingRecord,CookingCategory,CookingRecordRecipe,Recipe
 from .forms import CookingRecordForm
 import json
@@ -20,7 +21,14 @@ class MyListView(LoginRequiredMixin, ListView):
     context_object_name = 'cooking_records'
 
     def get_queryset(self):
-        return CookingRecord.objects.filter(user=self.request.user).order_by('-date')
+        if self.request.user.share_group:
+            cooking_records = CookingRecord.objects.filter(
+                Q(user__share_group=self.request.user.share_group) |
+                Q(user=self.request.user)
+            ).distinct()
+        else:
+            cooking_records = CookingRecord.objects.filter(user=self.request.user)
+        return cooking_records
     
 class CookingRecordCreateView(LoginRequiredMixin, CreateView):
     model = CookingRecord
@@ -28,6 +36,11 @@ class CookingRecordCreateView(LoginRequiredMixin, CreateView):
     template_name = 'cooking_records/record_form.html'
     success_url = reverse_lazy('cooking_records:my_list')
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user  # ここでフォームにuserを渡す
+        return kwargs
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['recipes'] = Recipe.objects.filter(user=self.request.user)
@@ -102,6 +115,11 @@ class CookingRecordUpdateView(LoginRequiredMixin, UpdateView):
     template_name = 'cooking_records/record_update_form.html'
     success_url = reverse_lazy('cooking_records:my_list')
         
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user  # ここでフォームにuserを渡す
+        return kwargs
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['recipes'] = Recipe.objects.filter(user=self.request.user)

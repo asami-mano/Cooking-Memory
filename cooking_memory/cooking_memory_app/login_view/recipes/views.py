@@ -11,10 +11,16 @@ class RecipeListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         query = self.request.GET.get('q', '')
-        queryset = Recipe.objects.filter(user=self.request.user).order_by('-created_at')
+        
+        if self.request.user.share_group:
+            queryset = Recipe.objects.filter(user__share_group=self.request.user.share_group)
+        else:
+            queryset = Recipe.objects.filter(user=self.request.user)
+
         if query:
             queryset = queryset.filter(name__icontains=query)
-        return queryset
+
+        return queryset.order_by('-created_at')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

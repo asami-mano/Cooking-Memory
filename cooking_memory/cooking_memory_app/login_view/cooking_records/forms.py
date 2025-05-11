@@ -1,5 +1,5 @@
 from django import forms
-from .models import CookingRecord, Recipe
+from .models import CookingRecord, CookingCategory
 
 class CookingRecordForm(forms.ModelForm):
     class Meta:
@@ -12,3 +12,8 @@ class CookingRecordForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
+
+        if user.share_group:
+            self.fields['cooking_category'].queryset = CookingCategory.objects.filter(user__share_group=user.share_group)
+        else:
+            self.fields['cooking_category'].queryset = CookingCategory.objects.filter(user=user)

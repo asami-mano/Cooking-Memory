@@ -25,8 +25,8 @@ class RegistForm(forms.ModelForm):
         
     def clean_password(self):
         password = self.cleaned_data.get('password')
-        if len(password) < 6:
-            raise ValidationError("パスワードは6文字以上で入力してください。")
+        if len(password) < 8:
+            raise ValidationError("パスワードは8文字以上で入力してください。")
         if not re.match(r'^[a-zA-Z0-9]+$', password):
             raise ValidationError("パスワードは英数字のみを使用してください。")
         return password
@@ -70,8 +70,8 @@ class UserLoginForm2(forms.Form):
         if not email or not password:
             raise forms.ValidationError("メールアドレスとパスワードを両方入力してください。")
 
-        if len(password) < 6:
-            self.add_error('password', 'パスワードは6文字以上で入力してください。')
+        if len(password) < 8:
+            self.add_error('password', 'パスワードは8文字以上で入力してください。')
 
         try:
             user = User.objects.get(email=email)
@@ -118,8 +118,8 @@ class PasswordChangeForm(forms.Form):
     def clean_new_password(self):
         new_password = self.cleaned_data.get('new_password')
 
-        if len(new_password) < 6:
-            raise ValidationError("パスワードは6文字以上で入力してください。")
+        if len(new_password) < 8:
+            raise ValidationError("パスワードは8文字以上で入力してください。")
 
         if not re.match(r'^[a-zA-Z0-9]+$', new_password):
             raise ValidationError("パスワードは英数字のみを使用してください。")
