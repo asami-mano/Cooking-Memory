@@ -41,15 +41,20 @@ class RegistForm(forms.ModelForm):
         cleaned_data = super().clean()
         password = cleaned_data.get('password')
         password2 = cleaned_data.get('password2')
+        
         if password and password2 and password != password2:
-            raise forms.ValidationError("パスワードが一致しません。")
+            self.add_error('password2', "パスワードが一致しません。")
+        if password:
+            try:
+                validate_password(password, self.instance)
+            except ValidationError as e:
+                self.add_error('password', e)
+
         return cleaned_data
 
     def save(self,commit=False):
         user=super().save(commit=False)
-        validate_password(self.cleaned_data['password'],user)
         user.set_password(self.cleaned_data['password'])
-        # user.save()
         return user
     
     
