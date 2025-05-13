@@ -62,7 +62,7 @@ label {
 .star-rating {
   display: inline-flex;#横並びにする
   gap: 4px;#星の間に4pxの隙間
-  direction: row-reverse; /* 右から左に星を並べる */
+  direction: ltr; /* ← 通常方向に戻す */
 }
 .star-rating input[type="radio"] {
   display: none;
@@ -72,21 +72,22 @@ label {
   color: #ccc;
   cursor: pointer;
 }
-/* チェックされたラジオボタン以降（左側の星も含め）を色づけ */
+/* 選択された星以前の星も黒にする */
+.star-rating input[type="radio"]:checked + label,
 .star-rating input[type="radio"]:checked ~ label {
-  color:#000000;
+  color: #000;
+}
+
+/* ホバーで左側の星も黒に */
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+  color: #000;
 }
 
 button[type="submit"] {
   font-size: 60px;
   align-items: center;
   padding: 10px 30px;
-}
-
-.easiness-labels {
-  margin-top: 5px;
-  font-size: 30px;
-  text-align: left;
 }
 
 #favoriteBtn {

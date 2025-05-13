@@ -33,9 +33,34 @@
     min-width: 200px;
   }
   
+  .star-rating {
+    display: inline-flex;#横並びにする
+    gap: 4px;#星の間に4pxの隙間
+    direction: ltr; /* ← 通常方向に戻す */
+  }
+  .star-rating input[type="radio"] {
+    display: none;
+  }
+  .star-rating label {
+    font-size: 100px;
+    color: #ccc;
+    cursor: pointer;
+  }
+  /* 選択された星以前の星も黒にする */
+  .star-rating input[type="radio"]:checked + label,
+  .star-rating input[type="radio"]:checked ~ label {
+    color: #000;
+  }
+
+  /* ホバーで左側の星も黒に */
+  .star-rating label:hover,
+  .star-rating label:hover ~ label {
+    color: #000;
+  }
+
   .easiness-labels {
     margin-top: 5px;
-    font-size: 40px;
+    font-size: 30px;
     text-align: left;
   }
 
@@ -97,14 +122,14 @@
     <div class="form-group">
       <label>調理の手軽さ</label>
       <div class="star-rating">
-        <input type="radio" id="easiness-3" name="cooking_easiness" value="2">
-        <label for="easiness-3">★</label>
-        <input type="radio" id="easiness-2" name="cooking_easiness" value="1" checked>
-        <label for="easiness-2">★</label>
         <input type="radio" id="easiness-1" name="cooking_easiness" value="0">
         <label for="easiness-1">★</label>
+        <input type="radio" id="easiness-2" name="cooking_easiness" value="1" checked>
+        <label for="easiness-2">★</label>
+        <input type="radio" id="easiness-3" name="cooking_easiness" value="2">
+        <label for="easiness-3">★</label>
       </div>
-      <div class="easiness-labels">
+      <div class="easiness-labels" style="font-size: 40px;">
         <span>★簡単  ★★普通  ★★★手間がかかる</span>
       </div>
     </div>
