@@ -34,9 +34,11 @@
   }
   
   .star-rating {
-    display: inline-flex;#横並びにする
+    display: flex;
     gap: 4px;#星の間に4pxの隙間
-    direction: ltr; /* ← 通常方向に戻す */
+    unicode-bidi: bidi-override;
+    direction: rtl;
+    justify-content: flex-start; /* ← 追加：左寄せにする */
   }
   .star-rating input[type="radio"] {
     display: none;
@@ -47,7 +49,7 @@
     cursor: pointer;
   }
   /* 選択された星以前の星も黒にする */
-  .star-rating input[type="radio"]:checked + label,
+  {% comment %} .star-rating input[type="radio"]:checked + label, {% endcomment %}
   .star-rating input[type="radio"]:checked ~ label {
     color: #000;
   }
@@ -76,7 +78,7 @@
   }  
 </style>
 
-<div class="main-content">
+<div class="main-content" style="text-align: left;">
   <form method="post" enctype="multipart/form-data" action="{% url 'cooking_records:cooking_record_create' %}">
     {% csrf_token %}
 
@@ -119,15 +121,15 @@
       <a href="#" id="open-category-modal" class="create-btn" style="color: blue; text-decoration: underline; font-size: 30px;">＋新規作成</a>
     </div>
 
-    <div class="form-group">
+    <div class="form-group" style="text-align: left;">
       <label>調理の手軽さ</label>
-      <div class="star-rating">
-        <input type="radio" id="easiness-1" name="cooking_easiness" value="0">
-        <label for="easiness-1">★</label>
-        <input type="radio" id="easiness-2" name="cooking_easiness" value="1" checked>
-        <label for="easiness-2">★</label>
+      <div class="star-rating" style="justify-content: flex-start;">
         <input type="radio" id="easiness-3" name="cooking_easiness" value="2">
         <label for="easiness-3">★</label>
+        <input type="radio" id="easiness-2" name="cooking_easiness" value="1" checked>
+        <label for="easiness-2">★</label>
+        <input type="radio" id="easiness-1" name="cooking_easiness" value="0">
+        <label for="easiness-1">★</label>
       </div>
       <div class="easiness-labels" style="font-size: 40px;">
         <span>★簡単  ★★普通  ★★★手間がかかる</span>
