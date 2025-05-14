@@ -12,6 +12,7 @@
 
   .content {
     padding-left: 30px; /* 左側に30pxの余白 */
+    padding-right: 30px; /* 右側に30pxの余白 */
   }
 
   .image-container{
@@ -113,14 +114,13 @@
         {% else %}★★★
         {% endif %}
       </p>
-      <p>メモ：</p>
-      <p>{{ record.memo|linebreaksbr }}</p>
+      <p>メモ：{{ record.memo|linebreaksbr }}</p>
 
       <div>
         <label>参考レシピ：</label>
-        <div class="recipe-list" style="font-size: 3em;">
+        <div class="recipe-list">
           {% for cr_recipe in record.cooking_record_recipes.all %}
-            <a href="{{ cr_recipe.recipe.recipe_url }}" target="_blank">{{ cr_recipe.recipe.name }}</a><br>
+            <a href="{{ cr_recipe.recipe.recipe_url }}" target="_blank" style="font-size: 1.5em;">{{ cr_recipe.recipe.name }}</a><br>
           {% endfor %}
         </div>
       </div>

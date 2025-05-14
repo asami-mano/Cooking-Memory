@@ -28,7 +28,7 @@ class MyListView(LoginRequiredMixin, ListView):
             ).distinct()
         else:
             cooking_records = CookingRecord.objects.filter(user=self.request.user)
-        return cooking_records
+        return cooking_records.order_by('-date')
     
 class CookingRecordCreateView(LoginRequiredMixin, CreateView):
     model = CookingRecord

@@ -49,7 +49,7 @@
   }
   
   #recipeList {
-    font-size: 40px;
+    font-size: 1em;
   }  
 </style>
 
@@ -121,7 +121,7 @@
 
     <!-- お気に入り（♡ボタン） -->
     <div class="form-group">
-      <label>お気に入り</label><br>
+      <label>お気に入り</label>
       <button type="button" id="favorite-btn" data-url="{% url 'cooking_records:toggle_favorite' pk=form.instance.pk %}" class="btn btn-link">
         {% if form.instance.is_favorite %}
             ❤️
@@ -145,7 +145,7 @@
         {% for cr_recipe in form.instance.cooking_record_recipes.all %}
           <li data-recipe-id="{{ cr_recipe.recipe.id }}">
             {{ cr_recipe.recipe.name }}
-            <button type="button" class="btn btn-danger btn-sm remove-recipe-btn" style="font-size: 40px;">削除</button>
+            <button type="button" class="btn btn-danger btn-sm remove-recipe-btn" style="font-size: 1em;">削除</button>
           </li>
         {% endfor %}
       </ul>
