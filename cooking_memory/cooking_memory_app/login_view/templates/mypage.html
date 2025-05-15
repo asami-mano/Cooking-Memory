@@ -10,7 +10,11 @@
 <style>
   .main-content {
     margin-top: 100px; /* ヘッダーの高さ分だけ空ける */
-    margin-left: 20px;
+  }
+
+  .content {
+    padding-left: 30px; /* 左側に30pxの余白 */
+    padding-right: 30px; /* 右側に30pxの余白 */
   }
 
   img{
@@ -89,19 +93,21 @@
     <p>画像がありません</p>
   {% endif %}
 
-  <!-- ファイル選択と登録ボタン -->
-  <form method="post" enctype="multipart/form-data" action="{% url 'accounts:upload_profile_image' %}">
-    {% csrf_token %}
-    <div class="file-upload-container">
-      <input type="file" name="image">
-      <button type="submit" class="custom-button" style="font-size: 40px;">登録</button>
-    </div>
-  </form>
+  <div class="content">
+    <!-- ファイル選択と登録ボタン -->
+    <form method="post" enctype="multipart/form-data" action="{% url 'accounts:upload_profile_image' %}">
+      {% csrf_token %}
+      <div class="file-upload-container">
+        <input type="file" name="image">
+        <button type="submit" class="custom-button" style="font-size: 40px;">登録</button>
+      </div>
+    </form>
 
-  <!-- 名前変更ボタンと名前/ニックネーム -->
-  <div class="user-name">
-    <button class="custom-button" data-bs-toggle="modal" data-bs-target="#nameChangeModal">名前変更</button>
-    <span>{{ user.username }}</span>
+    <!-- 名前変更ボタンと名前/ニックネーム -->
+    <div class="user-name">
+      <button class="custom-button" data-bs-toggle="modal" data-bs-target="#nameChangeModal">名前変更</button>
+      <span>{{ user.username }}</span>
+    </div>
   </div>
 
   <ul class="mypage-list">
