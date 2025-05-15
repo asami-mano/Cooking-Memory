@@ -43,21 +43,22 @@
   }
   .user-name {
     text-align: center;
-    margin-top: 5px;
+    margin-top: 20px;
     font-size: 50px;
     display: flex;
     justify-content: left;
     align-items: center;
     gap: 30px; /* ボタンと名前の間のスペース */
   }
-  {% comment %} .file-upload-container {
+  .file-upload-container {
+    text-align: center;
+    font-size: 50px;
     display: flex;
-    justify-content: center;
+    justify-content: left;
     align-items: center;
     gap: 20px;
     margin-top: 30px;
-    flex-wrap: wrap; /* 小さい画面でも崩れにくくする */
-  } {% endcomment %}
+  }
 
   input[type="file"] {
     font-size: 50px;
@@ -65,7 +66,7 @@
 
   .mypage-list {
     margin-top: 50px;
-    font-size: 3em;
+    font-size: 4em;
   }
   .mypage-item {
     display: flex;
@@ -99,10 +100,10 @@
   <!-- ファイル選択と登録ボタン -->
   <form method="post" enctype="multipart/form-data" action="{% url 'accounts:upload_profile_image' %}">
     {% csrf_token %}
-    {% comment %} <div class="file-upload-container"> {% endcomment %}
+    <div class="file-upload-container">
       <input type="file" name="image">
       <button type="submit" class="custom-button" style="font-size: 60px; margin-top: 10px;">選択した画像を登録</button>
-    {% comment %} </div> {% endcomment %}
+    </div>
   </form>
 
   <!-- 名前変更ボタンと名前/ニックネーム -->
