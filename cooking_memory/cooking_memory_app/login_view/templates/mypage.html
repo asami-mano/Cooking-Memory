@@ -10,10 +10,10 @@
 <style>
   .main-content {
     margin-top: 100px; /* ヘッダーの高さ分だけ空ける */
-    {% comment %} width: 100%;
-    max-width: 700px; /* 入力欄の幅を制限 */ {% endcomment %}
-    max-width: 100%;
-    {% comment %} margin-left: auto;
+    width: 100%;
+    max-width: 800px; /* 入力欄の幅を制限 */
+    {% comment %} max-width: 100%;
+    margin-left: auto;
     margin-right: auto;
     padding: 0 20px; {% endcomment %}
   }
@@ -64,8 +64,8 @@
   }
 
   .mypage-list {
-    margin-top: 80px;
-    font-size: 60px;
+    margin-top: 50px;
+    font-size: 2em;
   }
   .mypage-item {
     display: flex;
@@ -101,7 +101,7 @@
     {% csrf_token %}
     <div class="file-upload-container">
       <input type="file" name="image">
-      <button type="submit" class="custom-button" style="font-size: 40px;">登録</button>
+      <button type="submit" class="custom-button" style="font-size: 50px;">登録</button>
     </div>
   </form>
 
