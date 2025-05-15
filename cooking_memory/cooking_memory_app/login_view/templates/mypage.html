@@ -10,10 +10,12 @@
 <style>
   .main-content {
     margin-top: 100px; /* ヘッダーの高さ分だけ空ける */
-    max-width: 700px; /* 入力欄の幅を制限 */
-    margin-left: auto;
+    {% comment %} width: 100%;
+    max-width: 700px; /* 入力欄の幅を制限 */ {% endcomment %}
+    max-width: 100%;
+    {% comment %} margin-left: auto;
     margin-right: auto;
-    padding: 0 20px;
+    padding: 0 20px; {% endcomment %}
   }
 
   img{
