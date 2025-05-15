@@ -9,6 +9,7 @@
 
 <style>
   .main-content {
+    max-width: 100%;
     margin-top: 100px; /* ヘッダーの高さ分だけ空ける */
   }
 
@@ -35,10 +36,10 @@
     font-size: 60px;
   }
   input[type="submit"] {
-    font-size: 60px;
+    font-size: 5px0px;
     padding: 10px 30px;
   }
-  {% comment %} .user-name {
+  .user-name {
     text-align: center;
     margin-top: 40px;
     font-size: 50px;
@@ -46,11 +47,6 @@
     justify-content: left;
     align-items: center;
     gap: 30px; /* ボタンと名前の間のスペース */
-  } {% endcomment %}
-  .user-name {
-    text-align: center;
-    margin-top: 40px;
-    font-size: 50px;
   }
   .mypage-list {
     margin-top: 80px;
@@ -60,7 +56,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px;
+    padding: 30px;
     border-bottom: 1px solid #ccc;
   }
   .menu-link,
@@ -99,9 +95,10 @@
     <button type="submit">選択した画像を登録</button>
   </form>
 
-  <!-- 名前/ニックネーム -->
+  <!-- 名前変更ボタンと名前/ニックネーム -->
   <div class="user-name">
-    {{ user.username }}<button data-bs-toggle="modal" data-bs-target="#nameChangeModal" style="font-size: 35px; margin-left:20px">名前変更</button>
+    <button class="custom-button" data-bs-toggle="modal" data-bs-target="#nameChangeModal">名前変更</button>
+    <span>{{ user.username }}</span>
   </div>
 
   <ul class="mypage-list">
@@ -126,7 +123,7 @@
   <!-- ログアウト -->
   <form method="post" action="{% url 'accounts:user_logout_2' %}">
     {% csrf_token %}
-    <button>ログアウト</button>
+    <button style="font-size: 60px;>ログアウト</button>
   </form>
 </div>
 
