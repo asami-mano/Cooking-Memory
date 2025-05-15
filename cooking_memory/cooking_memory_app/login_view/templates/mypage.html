@@ -10,7 +10,7 @@
 <style>
   .main-content {
     margin-top: 100px; /* ヘッダーの高さ分だけ空ける */
-    max-width: 100%;
+    {% comment %} max-width: 100%; {% endcomment %}
     {% comment %} max-width: 1200px; /* 入力欄の幅を制限 */ {% endcomment %}
     {% comment %} max-width: 100%;
     margin-left: auto;
@@ -99,10 +99,10 @@
   <!-- ファイル選択と登録ボタン -->
   <form method="post" enctype="multipart/form-data" action="{% url 'accounts:upload_profile_image' %}">
     {% csrf_token %}
-    <div class="file-upload-container">
+    {% comment %} <div class="file-upload-container"> {% endcomment %}
       <input type="file" name="image">
-      <button type="submit" class="custom-button" style="font-size: 60px;">選択した画像を登録</button>
-    </div>
+      <button type="submit" class="custom-button" style="font-size: 60px; margin-top: 10px;">選択した画像を登録</button>
+    {% comment %} </div> {% endcomment %}
   </form>
 
   <!-- 名前変更ボタンと名前/ニックネーム -->
