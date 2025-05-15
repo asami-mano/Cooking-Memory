@@ -81,7 +81,7 @@
   {% if user.image_url %}
     <div style="text-align: center;"><img src="{{ user.image_url.url }}" alt="プロフィール画像"></div>
   {% else %}
-    <p>画像がありません</p>
+    <p style="text-align: center;">画像がありません</p>
   {% endif %}
 
   <form method="post" enctype="multipart/form-data" action="{% url 'accounts:upload_profile_image' %}">
@@ -136,7 +136,7 @@
           <input type="text" name="username" value="{{ user.username }}" class="form-control">
         </div>
         <div class="modal-footer">
-          <button type="submit" class="btn btn-primary" style="font-size: 30px;">変更</button>
+          <button type="submit" class="btn btn-primary" style="font-size: 40px;">変更</button>
         </div>
       </form>
     </div>
