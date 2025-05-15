@@ -12,8 +12,8 @@
     margin-top: 100px; /* ヘッダーの高さ分だけ空ける */
     {% comment %} max-width: 100%; {% endcomment %}
     {% comment %} max-width: 1200px; /* 入力欄の幅を制限 */ {% endcomment %}
-    {% comment %} max-width: 100%;
-    margin-left: auto;
+    max-width: 100%;
+    {% comment %} margin-left: auto;
     margin-right: auto;
     padding: 0 20px; {% endcomment %}
   }
@@ -55,7 +55,7 @@
     font-size: 50px;
     display: flex;
     justify-content: left;
-    align-items: center;
+    align-items: left;
     gap: 20px;
     margin-top: 30px;
   }
@@ -103,7 +103,7 @@
     <div class="file-upload-container">
       <input type="file" name="image">
     </div>
-    <button type="submit" class="custom-button" style="font-size: 60px; margin-top: 10px;">選択した画像を登録</button>
+    <button type="submit" class="custom-button" style="font-size: 60px;">選択した画像を登録</button>
   </form>
 
   <!-- 名前変更ボタンと名前/ニックネーム -->
