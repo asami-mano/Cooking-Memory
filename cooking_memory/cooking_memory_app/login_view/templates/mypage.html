@@ -23,7 +23,7 @@
 
   form div {
     font-size: 40px;
-    margin-bottom: 10px;
+    margin-bottom: 80px;
     width: 100%;
     max-width: 700px; /* 入力欄の幅を制限 */
   }
@@ -86,16 +86,8 @@
 
   <form method="post" enctype="multipart/form-data" action="{% url 'accounts:upload_profile_image' %}">
     {% csrf_token %}
-    <!-- ここに隠しfileInputを設置 -->
-    <input type="file" id="fileInput" name="image_url" accept="image/*" style="display: none;">
-
-    <div id="photoPreviewArea" style="margin-top: 1px;">
-      <img id="photoPreview" src="" alt="プレビュー" style="max-width: 100%; display: none;">
-    </div>
-
-    <button id="selectFromAlbum" type="button" style="font-size: 60px; margin-bottom: 40px;">＋画像を登録</button>
-    {% comment %} <a style="font-size: 40px; text-align: center;"><input type="file" name="image"></a>
-    <button type="submit" style="font-size: 50px; margin-top: 10px;">選択した画像を登録</button> {% endcomment %}
+    <a style="font-size: 40px; text-align: center;"><input type="file" name="image"></a>
+    <button type="submit" style="font-size: 50px; margin-top: 10px;">選択した画像を登録</button>
   </form>
 
   <!-- 名前/ニックネーム -->
@@ -168,33 +160,6 @@
 
 
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const fileInput = document.getElementById('fileInput');
-    const previewImg = document.getElementById('photoPreview');
-    const selectFromAlbumBtn = document.getElementById('selectFromAlbum');
-  
-    // 📷ボタン押したらファイル選択を開く
-    selectFromAlbumBtn.addEventListener('click', function() {
-      console.log('📷ボタン押された');
-      fileInput.click();
-    });
-
-    // fileInputでファイル選んだらプレビュー表示
-    fileInput.addEventListener('change', function(event) {
-      console.log('ファイル選択された');
-      const file = event.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          console.log('読み込み完了');
-          previewImg.src = e.target.result;
-          previewImg.style.display = 'block'; // 表示させる
-        };
-        reader.readAsDataURL(file);
-      }
-    });
-  });
-
   function share_users() {
       fetch("{% url 'accounts:share_users' %}")
           .then(response => response.json())
