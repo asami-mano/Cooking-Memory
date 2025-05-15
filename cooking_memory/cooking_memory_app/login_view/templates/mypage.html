@@ -9,7 +9,6 @@
 
 <style>
   .main-content {
-    max-width: 100%;
     margin-top: 100px; /* ヘッダーの高さ分だけ空ける */
   }
 
@@ -36,27 +35,23 @@
     font-size: 60px;
   }
   input[type="submit"] {
-    font-size: 5px0px;
+    font-size: 60px;
     padding: 10px 30px;
   }
   .user-name {
     text-align: center;
     margin-top: 40px;
     font-size: 50px;
-    display: flex;
-    justify-content: left;
-    align-items: center;
-    gap: 30px; /* ボタンと名前の間のスペース */
   }
   .mypage-list {
     margin-top: 80px;
-    font-size: 60px;
+    font-size: 50px;
   }
   .mypage-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 30px;
+    padding: 10px;
     border-bottom: 1px solid #ccc;
   }
   .menu-link,
@@ -91,14 +86,14 @@
 
   <form method="post" enctype="multipart/form-data" action="{% url 'accounts:upload_profile_image' %}">
     {% csrf_token %}
-    <a style="font-size: 50px;"><input type="file" name="image"></a>
-    <button type="submit">選択した画像を登録</button>
+    <a style="font-size: 40px;"><input type="file" name="image"></a>
+    <button type="submit">画像を登録</button>
+    <button type="submit">登録</button>
   </form>
 
-  <!-- 名前変更ボタンと名前/ニックネーム -->
+  <!-- 名前/ニックネーム -->
   <div class="user-name">
-    <button class="custom-button" data-bs-toggle="modal" data-bs-target="#nameChangeModal">名前変更</button>
-    <span>{{ user.username }}</span>
+    {{ user.username }}<button data-bs-toggle="modal" data-bs-target="#nameChangeModal" style="font-size: 35px; margin-left:20px">名前変更</button>
   </div>
 
   <ul class="mypage-list">
@@ -123,7 +118,7 @@
   <!-- ログアウト -->
   <form method="post" action="{% url 'accounts:user_logout_2' %}">
     {% csrf_token %}
-    <button style="font-size: 60px;>ログアウト</button>
+    <button type="submit">ログアウト</button>
   </form>
 </div>
 
