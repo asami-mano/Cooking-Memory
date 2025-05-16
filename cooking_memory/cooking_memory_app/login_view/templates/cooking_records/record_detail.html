@@ -109,9 +109,9 @@
       <p>日付：{{ record.date|date:"Y/n/j" }}</p>
       <p>カテゴリ：{{ record.cooking_category.name }}</p>
       <p>調理の手軽さ：
-        {% if record.cooking_easiness == 0 %}☆☆★
-        {% elif record.cooking_easiness == 1 %}☆★★
-        {% else %}★★★
+        {% if record.cooking_easiness == 0 %}😊
+        {% elif record.cooking_easiness == 1 %}🙂
+        {% else %}😣
         {% endif %}
       </p>
       <p>メモ：{{ record.memo|linebreaksbr }}</p>

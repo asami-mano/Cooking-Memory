@@ -33,39 +33,25 @@
     min-width: 200px;
   }
   
-  .star-rating {
+  .emoji-rating{
     display: flex;
-    gap: 4px;#星の間に4pxの隙間
-    unicode-bidi: bidi-override;
-    direction: ltr;
-    justify-content: flex-start; /* ← 追加：左寄せにする */
+    gap: 30px;
+    font-size: 100px;
+    align-items: center;
   }
-  .star-rating input[type="radio"] {
+  .emoji-rating input[type="radio"] {
     display: none;
   }
-  .star-rating label {
-    font-size: 100px;
-    color: #ccc;
+  .emoji-rating label {
     cursor: pointer;
+    opacity: 0.4;
+    transition: opacity 0.2s;
+    font-size: 100px;
   }
-  /* 選択された星以前の星も黒にする */
-  {% comment %} .star-rating input[type="radio"]:checked + label, {% endcomment %}
-  .star-rating input[type="radio"]:checked ~ label {
-    color: #000;
+  .emoji-rating input[type="radio"]:checked + label {
+    opacity: 1;
   }
-
-  /* ホバーで左側の星も黒に */
-  .star-rating label:hover,
-  .star-rating label:hover ~ label {
-    color: #000;
-  }
-
-  .easiness-labels {
-    margin-top: 5px;
-    font-size: 30px;
-    text-align: left;
-  }
-
+  
   #favoriteBtn {
     font-size: 100px;
     background: none;
@@ -123,19 +109,21 @@
 
     <div class="form-group" style="text-align: left;">
       <label>調理の手軽さ</label>
-      <div class="star-rating" style="justify-content: flex-start;">
-        <input type="radio" id="easiness-1" name="cooking_easiness" value="0">
-        <label for="easiness-1">★</label>
-        <input type="radio" id="easiness-2" name="cooking_easiness" value="1" checked>
-        <label for="easiness-2">★</label>
-        <input type="radio" id="easiness-3" name="cooking_easiness" value="2">
-        <label for="easiness-3">★</label>
+      <div class="emoji-rating">
+        <input type="radio" id="easy" name="cooking_easiness" value="0">
+        <label for="easy" title="簡単">😊</label>
+    
+        <input type="radio" id="normal" name="cooking_easiness" value="1" checked>
+        <label for="normal" title="普通">🙂</label>
+    
+        <input type="radio" id="hard" name="cooking_easiness" value="2">
+        <label for="hard" title="手間がかかる">😣</label>
       </div>
       <div class="easiness-labels" style="font-size: 40px;">
-        <span>★簡単  ★★普通  ★★★手間がかかる</span>
+        <span>簡単：😊　普通：🙂　手間がかかる：😣</span>
       </div>
     </div>
-
+    
     <div class="form-group">
       <label>お気に入り</label>
       <button type="button" id="favoriteBtn" data-is-favorite="0">🤍</button>

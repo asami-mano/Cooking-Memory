@@ -34,10 +34,23 @@
     min-width: 200px;
   }
 
-  .easiness-labels {
-    margin-top: 5px;
-    font-size: 40px;
-    text-align: left;
+  .emoji-rating{
+    display: flex;
+    gap: 30px;
+    font-size: 100px;
+    align-items: center;
+  }
+  .emoji-rating input[type="radio"] {
+    display: none;
+  }
+  .emoji-rating label {
+    cursor: pointer;
+    opacity: 0.4;
+    transition: opacity 0.2s;
+    font-size: 100px;
+  }
+  .emoji-rating input[type="radio"]:checked + label {
+    opacity: 1;
   }
 
   #favorite-btn {
@@ -106,16 +119,21 @@
     <!-- 調理の手軽さ -->
     <div class="form-group">
       <label>調理の手軽さ</label>
-      <div class="star-rating">
-        <input type="radio" id="easiness-3" name="cooking_easiness" value="2">
-        <label for="easiness-3">★</label>
-        <input type="radio" id="easiness-2" name="cooking_easiness" value="1" checked>
-        <label for="easiness-2">★</label>
-        <input type="radio" id="easiness-1" name="cooking_easiness" value="0">
-        <label for="easiness-1">★</label>
+      <div class="emoji-rating">
+        <input type="radio" id="easy" name="cooking_easiness" value="0"
+          {% if form.instance.cooking_easiness == 0 %}checked{% endif %}>
+        <label for="easy" title="簡単">😊</label>
+    
+        <input type="radio" id="normal" name="cooking_easiness" value="1"
+          {% if form.instance.cooking_easiness == 1 %}checked{% endif %}>
+        <label for="normal" title="普通">🙂</label>
+    
+        <input type="radio" id="hard" name="cooking_easiness" value="2"
+          {% if form.instance.cooking_easiness == 2 %}checked{% endif %}>
+        <label for="hard" title="手間がかかる">😣</label>
       </div>
-      <div class="easiness-labels">
-        <span>★簡単  ★★普通  ★★★手間がかかる</span>
+      <div class="easiness-labels" style="font-size: 40px;">
+        <span>簡単：😊　普通：🙂　手間がかかる：😣</span>
       </div>
     </div>
 
