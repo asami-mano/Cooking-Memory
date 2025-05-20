@@ -43,7 +43,8 @@ class CookingRecordCreateView(LoginRequiredMixin, CreateView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['recipes'] = Recipe.objects.filter(user=self.request.user)
+        share_group_id = self.request.user.share_group_id
+        context['recipes'] = Recipe.objects.filter(user__share_group_id=share_group_id).order_by('-created_at')
         return context
 
     def form_valid(self, form):
@@ -122,7 +123,8 @@ class CookingRecordUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['recipes'] = Recipe.objects.filter(user=self.request.user)
+        share_group_id = self.request.user.share_group_id
+        context['recipes'] = Recipe.objects.filter(user__share_group_id=share_group_id).order_by('-created_at')
         return context
     
     def form_valid(self, form):
