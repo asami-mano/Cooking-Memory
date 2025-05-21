@@ -39,6 +39,12 @@
       padding: 10px 30px;
     }
     
+  .error {
+    color: red;
+    font-size: 40px;
+    margin-top: 10px;
+  }
+
 </style>
   
 <div class="main-content">
@@ -46,13 +52,19 @@
     {% csrf_token %}
     <div class="form-group">
       <label>URL:</label><br>
-      <input type="text" name="recipe_url" id="recipe-url" required class="input-large">
+      <input type="text" name="recipe_url" id="recipe-url" required class="input-large" value="{{ form.recipe_url.value|default_if_none:'' }}">
+      {% if form.recipe_url.errors %}
+        <div class="error">{{ form.recipe_url.errors.0 }}</div>
+      {% endif %}
     </div>
     {% comment %} <button type="button" onclick="fetchTitle()" class="btn-large">レシピ名取得</button><br><br><br> {% endcomment %}
 
     <div class="form-group">
       <label>レシピ名:</label><br>
-      <input type="text" name="name" id="recipe-name" required class="input-large">
+      <input type="text" name="name" id="recipe-name" required class="input-large" value="{{ form.name.value|default_if_none:'' }}">
+      {% if form.name.errors %}
+        <div class="error">{{ form.name.errors.0 }}</div>
+      {% endif %}
     </div>
     <button type="submit" class="btn-submit">リストに追加</button>
   </form>
