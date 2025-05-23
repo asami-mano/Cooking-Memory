@@ -187,13 +187,18 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
 
-      <form id="category-form">
+      <div class="modal-body">
         {% csrf_token %}
         <input type="text" id="new-category-name" placeholder="カテゴリ名" required><br>
-      </form>
+      </div>
+
+      {% comment %} <form id="category-form">
+        {% csrf_token %}
+        <input type="text" id="new-category-name" placeholder="カテゴリ名" required><br>
+      </form> {% endcomment %}
     
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" id="addCategories">作成</button>
+        <button type="button" class="btn btn-primary" id="addCategories" style="font-size: 40px;">作成</button>
       </div>
     </div>
   </div>
