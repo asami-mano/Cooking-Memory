@@ -24,8 +24,8 @@
   }
 
   .modal-body input[type="checkbox"] {
-    width: 30px;
-    height: 30px;
+    width: 40px;
+    height: 40px;
     margin-right: 8px;
   }
 
@@ -112,7 +112,7 @@
     <!-- カテゴリ -->
     <div class="form-group" style="display: flex; align-items: center; gap: 10px;">
       <label>{{ form.cooking_category.label }}</label> {{ form.cooking_category }}
-      <a href="#" id="open-category-modal" class="create-btn" style="color: blue; text-decoration: underline; font-size: 40px;">＋新規作成</a>
+      <a href="#" data-bs-toggle="modal" data-bs-target="#category-modal" class="create-btn" style="color: blue; text-decoration: underline; font-size: 40px;">＋新規作成</a>
     </div>
 
 
@@ -180,18 +180,29 @@
 </div>
 
 <!-- モーダル -->
-<div id="category-modal" style="display:none; position:fixed; top:30%; left:30%; background:#fff; font-size:40px; border:1px solid #ccc; padding:20px;">
-  <h2>新規カテゴリ</h2>
-  <form id="category-form">
-    {% csrf_token %}
-    <input type="text" id="new-category-name" placeholder="カテゴリ名" required><br>
-    <button type="submit">作成</button>
-    <button type="button" onclick="closeModal()" style="position:absolute; top:5px; right:10px; border:none; background:none; cursor:pointer;">✖️</button>
-  </form>
+<div class="modal fade" id="category-modal" tabindex="-1">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">新規カテゴリ</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <form id="category-form">
+        {% csrf_token %}
+        <input type="text" id="new-category-name" placeholder="カテゴリ名" required><br>
+      </form>
+    
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="addCategories">作成</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div class="modal fade" id="recipeModal" tabindex="-1">
-  <div class="modal-dialog modal-xl">
+  <div class="modal-dialog modal-xl" style="max-width: 90%;">
     <div class="modal-content">
 
       <div class="modal-header">
@@ -219,20 +230,22 @@
 </div>
 
 <script>
-  document.getElementById("open-category-modal").addEventListener("click", function(e) {
-    e.preventDefault();
-    document.getElementById("category-modal").style.display = "block";
-  });
-  
-  function closeModal() {
-    document.getElementById("category-modal").style.display = "none";
-  }
-  
-  // 新規カテゴリ作成
-  document.getElementById("category-form").addEventListener("submit", function(e) {
-    e.preventDefault();
-    const name = document.getElementById("new-category-name").value;
-  
+  document.addEventListener("DOMContentLoaded", function () {
+    // 新規カテゴリ作成ボタンが存在するか確認
+    const addBtn = document.getElementById("addCategories");
+    if (!addBtn) {
+      console.error("addCategoriesボタンが見つかりません");
+      return;
+    }
+
+    addBtn.addEventListener("click", function (e) {
+      e.preventDefault();
+      const name = document.getElementById("new-category-name").value.trim();
+      if (!name) {
+        alert("カテゴリ名を入力してください");
+        return;
+      }
+
     fetch(`/cooking_records/create_category/`, {
       method: "POST",
       headers: {
@@ -252,12 +265,19 @@
         option.selected = true;
         select.appendChild(option);
   
-        closeModal();
+        const modalEl = document.getElementById("category-modal");
+        const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+        modal.hide();
       } else {
         alert("作成に失敗しました");
       }
+    })
+    .catch(error => {
+      console.error("エラー:", error);
+      alert("通信エラーが発生しました");
     });
   });
+});
 
   document.addEventListener('DOMContentLoaded', function() {
     const favoriteBtn = document.getElementById('favorite-btn');
