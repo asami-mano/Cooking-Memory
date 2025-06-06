@@ -63,6 +63,8 @@
   
   #recipeList {
     font-size: 1em;
+    list-style: none;
+    padding-left: 0;
   }  
 </style>
 
@@ -162,8 +164,8 @@
       <ul id="recipeList">
         {% for cr_recipe in form.instance.cooking_record_recipes.all %}
           <li data-recipe-id="{{ cr_recipe.recipe.id }}">
+            <span class="remove-recipe-btn" style="border: none; background: none; color: red; font-size: 1.2em; margin-right: 5px;">❌</span>
             {{ cr_recipe.recipe.name }}
-            <button type="button" class="btn btn-danger btn-sm remove-recipe-btn" style="font-size: 1em;">削除</button>
           </li>
         {% endfor %}
       </ul>
@@ -330,8 +332,8 @@
           const li = document.createElement('li');
           li.dataset.recipeId = recipeId;
           li.innerHTML = `
+            <span class="remove-recipe-btn" style="border: none; background: none; color: red; font-size: 1.2em; margin-right: 5px;">❌</span>
             <a >${recipeName}</a>
-            <button type="button" class="btn btn-danger btn-sm remove-recipe-btn" style="font-size: 1em;">削除</button>
           `;
           recipeList.appendChild(li);
         }
