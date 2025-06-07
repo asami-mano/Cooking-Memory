@@ -68,7 +68,7 @@
   }  
 </style>
 
-<div class="main-content">More actions
+<div class="main-content">
   <form method="post" action="{% url 'cooking_records:cooking_record_update' form.instance.pk %}" enctype="multipart/form-data" onsubmit="return handleSubmit();">
     {% csrf_token %}
     {{ form.non_field_errors }}
@@ -375,17 +375,6 @@
 
     console.log('送信するレシピID:', recipeIds);
   }
-
-  {% comment %} // フォーム送信時にhidden inputを構成  
-  document.querySelector('form').addEventListener('submit', function(event) {
-    event.preventDefault();  // デフォルトの送信を止める
-    updateRecipesInput();    // hidden input を作る
-
-    // 少し遅らせて送信（確実に hidden input が反映された後）
-    setTimeout(() => {
-      event.target.submit();
-    }, 50);
-  }); {% endcomment %}
 
   function handleSubmit() {
     updateRecipesInput();  // ← hidden input を生成する
