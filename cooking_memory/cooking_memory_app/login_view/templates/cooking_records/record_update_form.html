@@ -166,13 +166,13 @@
           <li data-recipe-id="{{ cr_recipe.recipe.id }}">
             <span class="remove-recipe-btn" style="border: none; background: none; color: red; font-size: 1.2em; margin-right: 5px;">❌</span>
             {{ cr_recipe.recipe.name }}
-          </li>More actions
+          </li>
         {% endfor %}
       </ul>
       <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#recipeModal">
         ＋レシピリスト
       </button>
-      <input type="hidden" name="recipes_hidden" id="recipesInput">
+      {% comment %} <input type="hidden" name="recipes_hidden" id="recipesInput"> {% endcomment %}
     </div>
 
     <!-- hiddenフィールド用（最初は空） -->
@@ -247,39 +247,38 @@
         alert("カテゴリ名を入力してください");
         return;
       }
-    })
 
-    fetch(`/cooking_records/create_category/`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRFToken": "{{ csrf_token }}",
-      },
-      body: JSON.stringify({ name: name }),
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.success) {
-        // セレクトに追加
-        const select = document.getElementById("id_cooking_category");
-        const option = document.createElement("option");
-        option.value = data.id;
-        option.text = data.name;
-        option.selected = true;
-        select.appendChild(option);
+      fetch(`/cooking_records/create_category/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": "{{ csrf_token }}",
+        },
+        body: JSON.stringify({ name: name }),
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          // セレクトに追加
+          const select = document.getElementById("id_cooking_category");
+          const option = document.createElement("option");
+          option.value = data.id;
+          option.text = data.name;
+          option.selected = true;
+          select.appendChild(option);
 
-        const modalEl = document.getElementById("category-modal");
-        const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
-        modal.hide();
-      } else {
-        alert("作成に失敗しました");
-      }
-    })
-    .catch(error => {
-      console.error("エラー:", error);
-      alert("通信エラーが発生しました");
+          const modalEl = document.getElementById("category-modal");
+          const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+          modal.hide();
+        } else {
+          alert("作成に失敗しました");
+        }
+      })
+      .catch(error => {
+        console.error("エラー:", error);
+        alert("通信エラーが発生しました");
+      });
     });
-  });
 
   document.addEventListener('DOMContentLoaded', function() {
     const favoriteBtn = document.getElementById('favorite-btn');
@@ -333,8 +332,8 @@
           li.dataset.recipeId = recipeId;
           li.innerHTML = `
             <span class="remove-recipe-btn" style="border: none; background: none; color: red; font-size: 1.2em; margin-right: 5px;">❌</span>
-            <a >${recipeName}</a>
-          `;More actions
+            <a href="#">${recipeName}</a>
+          `;
           recipeList.appendChild(li);
         }
       });
@@ -343,7 +342,19 @@
       const modal = bootstrap.Modal.getInstance(document.getElementById('recipeModal'));
       modal.hide();
     });
+
+    // フォーム送信時にhidden inputを構成
+    document.querySelector('form').addEventListener('submit', function(event) {
+      event.preventDefault();  // デフォルトの送信を止める
+      updateRecipesInput();    // hidden input を作る
+
+      // 少し遅らせて送信（確実に hidden input が反映された後）
+      setTimeout(() => {
+        event.target.submit();
+      }, 50);
+    });
   });
+  
 
   function updateRecipesInput() {
     const recipeIds = Array.from(document.querySelectorAll('#recipeList li'))
@@ -365,7 +376,7 @@
     console.log('送信するレシピID:', recipeIds);
   }
 
-  // フォーム送信時にhidden inputを構成  
+  {% comment %} // フォーム送信時にhidden inputを構成  
   document.querySelector('form').addEventListener('submit', function(event) {
     event.preventDefault();  // デフォルトの送信を止める
     updateRecipesInput();    // hidden input を作る
@@ -374,7 +385,7 @@
     setTimeout(() => {
       event.target.submit();
     }, 50);
-  });
+  }); {% endcomment %}
 
   function handleSubmit() {
     updateRecipesInput();  // ← hidden input を生成する
