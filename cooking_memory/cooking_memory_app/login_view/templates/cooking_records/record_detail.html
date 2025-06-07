@@ -106,21 +106,54 @@
       </a>
     </div>
     <div class="form-group">
-      <p>日付：{{ record.date|date:"Y/n/j" }}</p>
-      <p>カテゴリ：{{ record.cooking_category.name }}</p>
-      <p>調理の手軽さ：
+      {% comment %} <table>
+        <tr>
+          <th>日付：</th>
+          <td>{{ record.date|date:"Y/n/j" }}</td>
+        </tr>
+        <tr>
+          <th>カテゴリ：</th>
+          <td>{{ record.cooking_category.name }}</td>
+        </tr>
+        <tr>
+          <th>調理の手軽さ：</th>
+          <td>{% if record.cooking_easiness == 0 %}😊
+              {% elif record.cooking_easiness == 1 %}🙂
+              {% else %}😣
+              {% endif %}
+          </td>
+        </tr>
+        <tr>
+          <th>メモ：</th>
+          <td>{{ record.memo|linebreaksbr }}</td>
+        </tr>
+        <tr>
+          <th>参考レシピ：</th>
+          <td>
+            {% for cr_recipe in record.cooking_record_recipes.all %}
+            <a href="{{ cr_recipe.recipe.recipe_url }}" target="_blank" style="font-size: 1.5em;">{{ cr_recipe.recipe.name }}</a><br>
+            {% endfor %}
+          </td>
+        </tr>
+      </table> {% endcomment %}
+
+      <p>【日付】{{ record.date|date:"Y/n/j" }}</p>
+      <p>【カテゴリ】{{ record.cooking_category.name }}</p>
+      <p>【調理の手軽さ】
         {% if record.cooking_easiness == 0 %}😊
         {% elif record.cooking_easiness == 1 %}🙂
         {% else %}😣
         {% endif %}
       </p>
-      <p>メモ：{{ record.memo|linebreaksbr }}</p>
+
+      <label>【メモ】</label>
+      <p style="padding-left: 25px;">{{ record.memo|linebreaksbr }}</p>
 
       <div>
-        <label>参考レシピ：</label>
+        <label>【参考レシピ】</label>
         <div class="recipe-list">
           {% for cr_recipe in record.cooking_record_recipes.all %}
-            <a href="{{ cr_recipe.recipe.recipe_url }}" target="_blank" style="font-size: 1.5em;">{{ cr_recipe.recipe.name }}</a><br>
+            <a href="{{ cr_recipe.recipe.recipe_url }}" target="_blank" style="font-size: 1.5em; padding-left: 25px;">{{ cr_recipe.recipe.name }}</a><br>
           {% endfor %}
         </div>
       </div>
